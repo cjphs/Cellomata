@@ -13,7 +13,7 @@ state_being_defined = ""
 
 rules = None
 
-f = open("rules.txt")
+f = open("python/rules.txt")
 
 l = True
 while(l):
