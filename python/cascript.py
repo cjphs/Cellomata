@@ -1,3 +1,5 @@
+from random import random
+
 class transformation:
     # count = -1 -> true for any count
     def __init__(self, goal_state, locality_cell_type="", locality_type="always", count=-1, chance=1):
@@ -8,6 +10,11 @@ class transformation:
         self.count = count
 
     def evaluate(self, neighborhood):
+
+        if self.chance != 1:
+            if random() >= self.chance:
+                return False
+
         match self.locality_type:
             case "always":
                 return True

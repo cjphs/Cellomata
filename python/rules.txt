@@ -1,0 +1,10 @@
+dead, alive
+
+dead becomes
+alive if 3*alive nearby
+dead otherwise.
+
+alive becomes
+alive if 2*alive nearby
+alive if 3*alive nearby
+dead otherwise.
