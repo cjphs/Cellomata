@@ -1,0 +1,16 @@
+empty, ocean, forest, sands, snow
+@colors
+black, blue, lime, yellow, white
+
+empty becomes:
+ocean with chance .075 if ocean nearby
+forest with chance .025 if forest nearby
+sands with chance .025 if sands nearby
+snow with chance .025 if snow nearby
+empty otherwise.
+
+ocean becomes:
+sands if 3*forest nearby
+sands if 4*forest nearby
+sands if 5*forest nearby
+ocean otherwise.

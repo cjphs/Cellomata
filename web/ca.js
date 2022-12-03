@@ -28,6 +28,18 @@ function draw() {
 
 let CA_grid = null;
 
+let playing = false;
+
+frame = 0;
+
+play = function() {
+    if (playing) {
+        if (frame++ % 10 == 0) 
+            evolveDraw();
+        
+        requestAnimationFrame(play);
+    }
+}
 
 evolveDraw = function() {
     CA_grid.evolve();
@@ -41,6 +53,8 @@ updateRules = function() {
         CA_grid = new Grid(grid_width, grid_height, CA_rules);
     else
         CA_grid.rules = CA_rules;
+
+    playing = false;
 
     CA_grid.resetGrid();
 }
