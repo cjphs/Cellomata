@@ -18,6 +18,36 @@ function draw() {
     }
 }
 
+
+// CA_rules.addRule("dead", new Transformation("alive","nearby","alive", 3,1));
+// CA_rules.addRule("dead", new Transformation("dead","always"));
+
+// CA_rules.addRule("alive", new Transformation("alive", "nearby", "alive", 2));
+// CA_rules.addRule("alive", new Transformation("alive", "nearby", "alive", 3));
+// CA_rules.addRule("alive", new Transformation("dead", "always"));
+
+let CA_grid = null;
+
+
+evolveDraw = function() {
+    CA_grid.evolve();
+    draw();
+}
+
+updateRules = function() {
+    var CA_rules = interpretRules();
+
+    if (CA_grid == null)
+        CA_grid = new Grid(grid_width, grid_height, CA_rules);
+    else
+        CA_grid.rules = CA_rules;
+
+    CA_grid.resetGrid();
+}
+
+updateRules();
+draw();
+
 let mouse_down = false;
 canvas.addEventListener('mousedown', function() {mouse_down = true}, false);
 canvas.addEventListener('mouseup', function() {mouse_down = false}, false);
@@ -32,46 +62,9 @@ canvas.addEventListener('mousemove', e => {
         var cx = Math.floor(x/cell_width);
         var cy = Math.floor(y/cell_height);
 
-        console.log(cx);
+        console.log(document.getElementById("edit_box").value);
 
-        CA_grid.setCellState(cx, cy, CA_grid.rules.states[1]);
+        CA_grid.setCellState(cx, cy, document.getElementById("edit_box").value);
         draw();
     }
 }, false);
-
-let CA_states = ["Dead", "Alive"];
-let state_cols = {
-    "Dead": "white",
-    "Alive": "black"
-}
-
-let CA_rules = new Ruleset(CA_states);
-
-// CA_rules.addRule("dead", new Transformation("alive","nearby","alive", 3,1));
-// CA_rules.addRule("dead", new Transformation("dead","always"));
-
-// CA_rules.addRule("alive", new Transformation("alive", "nearby", "alive", 2));
-// CA_rules.addRule("alive", new Transformation("alive", "nearby", "alive", 3));
-// CA_rules.addRule("alive", new Transformation("dead", "always"));
-
-let CA_grid = new Grid(grid_width, grid_height, CA_rules);
-
-CA_grid.setCellState(10,10, "Alive");
-CA_grid.setCellState(11,10, "Alive");
-CA_grid.setCellState(12,10, "Alive");
-CA_grid.setCellState(10,9,  "Alive");
-CA_grid.setCellState(11,8,  "Alive");
-
-console.log(CA_grid);
-
-draw();
-
-evolveDraw = function() {
-    CA_grid.evolve();
-    draw();
-}
-
-updateRules = function() {
-    var CA_rules = interpretRules();
-    CA_grid.rules = CA_rules;
-}

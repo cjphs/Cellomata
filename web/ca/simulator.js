@@ -31,6 +31,11 @@ class Transformation {
                 else
                     return (neighborhood_dict[this.locality_check_state] == this.locality_count);
                 break;
+
+            // directional
+            default:
+                return (neighborhood_dict["*" + this.locality_check_type] == this.locality_check_state)
+                break;
         }
         return false;
     }
@@ -88,6 +93,10 @@ class Grid {
         return grid;
     }
 
+    resetGrid = function() {
+        this.grid = this.getEmptyGrid();
+    }
+
     // Check if (x,y) are valid coordinates in the grid
     coordinatesInBounds = function(x,y) {
         return (x >= 0 & x < this.width & y >= 0 & y < this.height)
@@ -125,6 +134,15 @@ class Grid {
                             neighborhood_dict[this.getCellState(i,j)] += 1;
                     }
                 }
+
+                neighborhood_dict["*below"] = this.getCellState(x,y+1);
+                neighborhood_dict["*above"] = this.getCellState(x,y-1);
+                neighborhood_dict["*left"] = this.getCellState(x-1,y);
+                neighborhood_dict["*right"] = this.getCellState(x+1,y);
+                neighborhood_dict["*bottomleft"] = this.getCellState(x-1,y+1);
+                neighborhood_dict["*bottomright"] = this.getCellState(x+1,y+1);
+                neighborhood_dict["*topleft"] = this.getCellState(x-1,y-1);
+                neighborhood_dict["*topright"] = this.getCellState(x+1,y-1);
 
                 rule_loop:
                 for(var r = 0; r < this.rules.transformations[cell_state].length; r++) {

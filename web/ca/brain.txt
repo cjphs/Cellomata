@@ -1,0 +1,13 @@
+Dead, Alive, Dying
+@colors
+white, black, blue
+
+Dead becomes:
+Alive if 2*Alive nearby
+Dead otherwise.
+
+Alive becomes:
+Dying.
+
+Dying becomes:
+Dead.
