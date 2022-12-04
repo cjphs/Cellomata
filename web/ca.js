@@ -1,11 +1,13 @@
 const canvas = document.getElementById("grid_canvas");
 const ctx = canvas.getContext('2d');
 
-let grid_width = 30;
-let grid_height = 30;
+console.log(canvas)
 
-let cell_width = 20;
-let cell_height = 20;
+let grid_width = 50;
+let grid_height = 50;
+
+let cell_width = canvas.clientWidth/grid_width;
+let cell_height = canvas.clientHeight/grid_height;
 
 function draw() {
     for(var y = 0; y < grid_height; y++) {
