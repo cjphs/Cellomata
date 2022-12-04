@@ -48,7 +48,7 @@ evolveDraw = function() {
     draw();
 }
 
-updateRules = function() {
+updateRules = function(reset=false) {
     var CA_rules = interpretRules();
 
     if (CA_grid == null)
@@ -56,12 +56,13 @@ updateRules = function() {
     else
         CA_grid.rules = CA_rules;
 
-    playing = false;
-
-    CA_grid.resetGrid();
+    if (reset_grid || reset) {
+        CA_grid.resetGrid(only_override_nonexistant_states=true);
+        draw();
+    }
 }
 
-updateRules();
+updateRules(true);
 draw();
 
 let mouse_down = false;

@@ -14,6 +14,15 @@ class Transformation {
 
         // Chance of the transformation occuring (for probabilistic CA)
         this.chance = chance;
+
+        // if not null, then this rule must be true with the next rule
+        this.conjucted_with = null;
+
+        this.do_evaluation = true;
+    }
+
+    conjunctWith = function(transformation) {
+        this.conjucted_with = transformation
     }
 
     // True -> Cell being investigated becomes the transform_state.
@@ -93,8 +102,17 @@ class Grid {
         return grid;
     }
 
-    resetGrid = function() {
-        this.grid = this.getEmptyGrid();
+    resetGrid = function(only_override_nonexistant_states=false) {
+        if (!only_override_nonexistant_states)
+            this.grid = this.getEmptyGrid();
+        else {
+            for(var y = 0; y < this.height; y++) {
+                for(var x = 0; x < this.width; x++) {
+                    if (!this.rules.states.includes(this.getCellState(x,y)))
+                        this.setCellState(x,y,this.rules.getDefaultState());
+                }
+            }
+        }
     }
 
     // Check if (x,y) are valid coordinates in the grid
@@ -148,7 +166,22 @@ class Grid {
                 for(var r = 0; r < this.rules.transformations[cell_state].length; r++) {
                     var rule = this.rules.transformations[cell_state][r];
 
-                    if (rule.evaluate(neighborhood_dict)) {
+                    if (!rule.do_evaluation)
+                        continue rule_loop;
+                    
+                    var truth_value = rule.evaluate(neighborhood_dict);
+                    if (truth_value) {
+                        conjunction_check: 
+                        while(rule.conjucted_with != null) {
+                            rule = rule.conjucted_with;
+                            truth_value = rule.evaluate(neighborhood_dict);
+
+                            if (!truth_value) {
+                                break conjunction_check;
+                            }
+                        }
+                    }
+                    if (truth_value) {
                         next_grid[y][x] = rule.transform_state;
                         break rule_loop;
                     }
