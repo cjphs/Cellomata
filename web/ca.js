@@ -1,13 +1,16 @@
 const canvas = document.getElementById("grid_canvas");
 const ctx = canvas.getContext('2d');
 
-console.log(canvas)
-
 let grid_width = 50;
 let grid_height = 50;
 
 let cell_width = canvas.clientWidth/grid_width;
 let cell_height = canvas.clientHeight/grid_height;
+
+let CA_grid = null;
+let playing = false;
+
+let frame = 0;
 
 function draw() {
     for(var y = 0; y < grid_height; y++) {
@@ -20,20 +23,6 @@ function draw() {
     }
 }
 
-
-// CA_rules.addRule("dead", new Transformation("alive","nearby","alive", 3,1));
-// CA_rules.addRule("dead", new Transformation("dead","always"));
-
-// CA_rules.addRule("alive", new Transformation("alive", "nearby", "alive", 2));
-// CA_rules.addRule("alive", new Transformation("alive", "nearby", "alive", 3));
-// CA_rules.addRule("alive", new Transformation("dead", "always"));
-
-let CA_grid = null;
-
-let playing = false;
-
-frame = 0;
-
 play = function() {
     if (playing) {
         if (frame++ % 10 == 0) 
@@ -41,11 +30,6 @@ play = function() {
         
         requestAnimationFrame(play);
     }
-}
-
-evolveDraw = function() {
-    CA_grid.evolve();
-    draw();
 }
 
 cssAnim = function(element, animation) {
@@ -71,34 +55,40 @@ updateRules = function(reset=false) {
     cssAnim("grid_canvas", "rules_save 1s")
 }
 
+evolveDraw = function() {
+    CA_grid.evolve();
+    draw();
+}
+
 updateRules(true);
 draw();
 
+
+/////////////////
+// Event stuff //
+/////////////////
+
 document.onkeydown = function (e) {
-    e = e || window.event;//Get event
+    e = e || window.event; //Get event
    
     if (!e.ctrlKey) return;
    
-    var code = e.which || e.keyCode;//Get key code
-   
     switch (code) {
-        case 83://Block Ctrl+S
-        case 87://Block Ctrl+W -- Not work in Chrome and new Firefox
-        
-        updateRules();
-        draw();
-        
-        e.preventDefault();
-        e.stopPropagation();
-        break;
+        case 83: // CTRL + S
+            updateRules();
+            draw();
+            
+            e.preventDefault();
+            e.stopPropagation();
+            break;
 
         case 88:
-        CA_grid.resetGrid();
-        draw();
-        cssAnim("grid_canvas", "grid_clear 1s");
-        break;
+            CA_grid.resetGrid();
+            draw();
+            cssAnim("grid_canvas", "grid_clear 1s");
+            break;
     }
-    }; 
+}; 
 
 let mouse_down = false;
 canvas.addEventListener('mousedown', function() {mouse_down = true}, false);
@@ -120,3 +110,4 @@ canvas.addEventListener('mousemove', e => {
         draw();
     }
 }, false);
+
