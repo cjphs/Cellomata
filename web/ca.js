@@ -48,6 +48,13 @@ evolveDraw = function() {
     draw();
 }
 
+cssAnim = function(element, animation) {
+    var canv = document.getElementById(element)
+    canv.style.animation = 'none';
+    canv.offsetWidth;
+    canv.style.animation = animation; 
+}
+
 updateRules = function(reset=false) {
     var CA_rules = interpretRules();
 
@@ -60,10 +67,38 @@ updateRules = function(reset=false) {
         CA_grid.resetGrid(only_override_nonexistant_states=true);
         draw();
     }
+
+    cssAnim("grid_canvas", "rules_save 1s")
 }
 
 updateRules(true);
 draw();
+
+document.onkeydown = function (e) {
+    e = e || window.event;//Get event
+   
+    if (!e.ctrlKey) return;
+   
+    var code = e.which || e.keyCode;//Get key code
+   
+    switch (code) {
+        case 83://Block Ctrl+S
+        case 87://Block Ctrl+W -- Not work in Chrome and new Firefox
+        
+        updateRules();
+        draw();
+        
+        e.preventDefault();
+        e.stopPropagation();
+        break;
+
+        case 88:
+        CA_grid.resetGrid();
+        draw();
+        cssAnim("grid_canvas", "grid_clear 1s");
+        break;
+    }
+    }; 
 
 let mouse_down = false;
 canvas.addEventListener('mousedown', function() {mouse_down = true}, false);

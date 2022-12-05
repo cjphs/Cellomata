@@ -41,14 +41,36 @@ body {
     background-color: rgb(75, 75, 75);
 }
 
+@keyframes rules_save {
+    from {
+        box-shadow: 0 0 20px lime;
+    }
+
+    to {
+        box-shadow: 0 0 0px black;
+    }
+}
+
+@keyframes grid_clear {
+    from {
+        box-shadow: 0 0 20px aqua;
+    }
+
+    to {
+        box-shadow: 0 0 0px black;
+    }
+}
+
 .grid {
-    height: 80%;
-    width:90%;
-    background: gray;
 }
 
 .controls {
     height: 10%;
+}
+
+#grid_canvas {
+    margin:20px;
+    animation: rules_save 1s;
 }
 </style>
 
