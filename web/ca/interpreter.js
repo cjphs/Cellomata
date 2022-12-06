@@ -41,14 +41,6 @@ interpretRules = function() {
                     states = new_states;
                     ruleset = new Ruleset(states);
 
-                    // apply states to editor
-                    var states_combobox = document.getElementById("edit_box");
-                    states_combobox.innerHTML = "";
-                    
-                    states.forEach(s => {
-                        states_combobox.innerHTML += "<option value='" + s + "'>" + s + "</option>";
-                    });
-
                     interpreter_state = Modes.SKIP;
                     break;
 
