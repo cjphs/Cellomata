@@ -42,6 +42,16 @@ cssAnim = function(element, animation) {
 updateRules = function(reset=false) {
     var CA_rules = interpretRules();
 
+    var states_box = document.getElementById("state_picker");
+    
+    states_box.innerHTML = "";
+                    
+    CA_rules.states.forEach(s => {
+        console.log(s);
+        states_box .innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + state_cols[s] + "'>" + s + "</div> ");
+        console.log(states_box);
+    });
+
     if (CA_grid == null)
         CA_grid = new Grid(grid_width, grid_height, CA_rules);
     else
@@ -107,9 +117,11 @@ canvas.addEventListener('mousemove', e => {
         var cx = Math.floor(x/cell_width);
         var cy = Math.floor(y/cell_height);
 
-        console.log(document.getElementById("edit_box").value);
+        if (false) {
+            console.log(document.getElementById("edit_box").value);
 
-        CA_grid.setCellState(cx, cy, document.getElementById("edit_box").value);
+            CA_grid.setCellState(cx, cy, document.getElementById("edit_box").value);
+        }
         draw();
     }
 }, false);

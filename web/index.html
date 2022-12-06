@@ -1,34 +1,56 @@
 <style>
-body {
+
+html, body {
     background-color: rgb(27, 27, 27);
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: center; 
 }
 
 .container {
-    width: 100%;
-    overflow: hidden;
-    padding: 5px;
+
+    white-space: nowrap;
+    position: relative;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 400px 0 0;
 }
 
 .vcontainer {
-    height: 100%;
-    width: 30%;
-    float: left;
+    width: 400px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .settings {
-    height: 20%;
+    height: 50px;
 }
 
 .editor {
     font-family: 'Courier New', Courier, monospace;
+}
+
+.state_picker {
     width: 100%;
-    height:70%;
+    height: 100px;
+    align-items: center;
+    overflow-x: scroll;
+}
+
+.state_picker .state {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin-top: 25px;
+    background-color: aqua;
 }
 
 .simulator {
-    float: left;
-    width: 60%;
-    padding: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 600px;
 }
 
 #rule_input_box {
@@ -36,8 +58,8 @@ body {
     border-style: none;
     padding: 10px;
     font-size:x-large;
-    width: 95%;
-    height:100%;
+    height:600px;
+    width:100%;
     background-color: rgb(75, 75, 75);
 }
 
@@ -81,15 +103,16 @@ body {
     <body>
         <div class="container">
             <div class="vcontainer">
-                <div class="settings">
+                <div style="height:100px"></div>
+                <!-- <div class="settings">
                     Settings
                     <select id="edit_box">
                         <option value=""></option>
                         <option value="">2</option>
                     </select>
-                </div>
-            <div class="editor">
-                <textarea id="rule_input_box">
+                </div> -->
+                <div class="editor">
+                    <textarea id="rule_input_box">
 Dead, Alive
 @colors
 white, black
@@ -102,21 +125,34 @@ Alive becomes:
 Alive if 2*Alive nearby
 Alive if 3*Alive nearby
 Dead otherwise.
-                </textarea>
+                    </textarea>
+                </div>
+
+                <div style="height:100px">
+                    <button style="width:100%; height:50%" onclick="updateRules()">Interpret</button>;
+                </div>
             </div>
-        </div>
 
-            <div class="simulator">
+
+            <!-- Simulation panel (grid) -->
+            <div class="simulator" style="margin: 15px">
+                <div class="state_picker" id="state_picker">
+                    <div class="state" onclick="console.log('hi!')">Gary</div>
+                    <div class="state">Gary</div>
+                    <div class="state">Gary</div>
+                    <div class="state">Gary</div>
+                    <div class="state">Gary</div>
+                    <div class="state">Gary</div>
+
+                </div>
+
                 <div class="grid">
-                    <canvas width="600" height="600" id="grid_canvas">
-
-                    </canvas>
+                    <canvas width="600" height="600" id="grid_canvas" style="margin: 0"> </canvas>
                 </div>
 
                 <div class="controls">
-                    <button style="width:100px; height:100%" onclick="updateRules()">Interpret</button>
-                    <button style="width:100px; height:100%" onclick="evolveDraw()">Step</button>
-                    <button style="width:100px; height:100%" onclick="playing = !playing; play()">Play</button>
+                    <button style="width:100px; height:50%" onclick="evolveDraw()">Step</button> | 
+                    <button style="width:100px; height:50%" onclick="playing = !playing; play()">Play</button>
                 </div>
             </div>
         </div>
