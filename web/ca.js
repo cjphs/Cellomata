@@ -72,21 +72,24 @@ document.onkeydown = function (e) {
     e = e || window.event; //Get event
    
     if (!e.ctrlKey) return;
+    
+    var code = e.which || e.keyCode;//Get key code
    
     switch (code) {
-        case 83: // CTRL + S
-            updateRules();
-            draw();
-            
-            e.preventDefault();
-            e.stopPropagation();
-            break;
+        case 83:
+        case 87:
+        updateRules();
+        draw();
+        
+        e.preventDefault();
+        e.stopPropagation();
+        break;
 
         case 88:
-            CA_grid.resetGrid();
-            draw();
-            cssAnim("grid_canvas", "grid_clear 1s");
-            break;
+        CA_grid.resetGrid();
+        draw();
+        cssAnim("grid_canvas", "grid_clear 1s");
+        break;
     }
 }; 
 
