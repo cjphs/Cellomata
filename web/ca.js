@@ -20,7 +20,7 @@ function draw() {
             ctx.fillStyle = state_cols[CA_grid.getCellState(x,y)];
             ctx.fillRect(cell_width*x, cell_height*y, cell_width, cell_height);
             
-            ctx.strokeRect(cell_width*x, cell_height*y, cell_width, cell_height);
+            // ctx.strokeRect(cell_width*x, cell_height*y, cell_width, cell_height);
         }
     }
 }

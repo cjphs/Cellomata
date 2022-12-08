@@ -60,7 +60,11 @@ class Transformation {
 
             // directional
             default:
-                return (neighborhood_dict["*" + this.locality_check_type] == this.locality_check_state)
+                if (this.locality_count != 0)
+                    return (neighborhood_dict["*" + this.locality_check_type] == this.locality_check_state)
+                else
+                    return (neighborhood_dict["*" + this.locality_check_type] != this.locality_check_state)
+
                 break;
         }
         return false;
