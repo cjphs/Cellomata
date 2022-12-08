@@ -26,10 +26,13 @@ function draw() {
 }
 
 play = function() {
-    if (playing && (frame++ % 10 == 0)) {
+    if (!playing)
+        return;
+    
+    if (frame++ % 10 == 0) {
         evolveDraw();
     }
-        
+
     requestAnimationFrame(play);
 }
 
