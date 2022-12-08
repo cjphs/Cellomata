@@ -1,8 +1,8 @@
 const canvas = document.getElementById("grid_canvas");
 const ctx = canvas.getContext('2d');
 
-let grid_width = 50;
-let grid_height = 50;
+let grid_width = 64;
+let grid_height = 64;
 
 let cell_width = canvas.clientWidth/grid_width;
 let cell_height = canvas.clientHeight/grid_height;
@@ -49,7 +49,7 @@ selectCellState = function(state) {
         selected_cell_element.style.boxShadow = "none";
 
     selected_cell_element = document.getElementById(state);
-    selected_cell_element.style.boxShadow = "0 0 20px white";
+    selected_cell_element.style.boxShadow = "white 0 0 10px";
     selected_cell_state = state;
 }
 
@@ -63,7 +63,7 @@ updateRules = function(reset=false) {
     CA_rules.states.forEach(s => {
         console.log("huh");
         console.log(s);
-        states_box.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + state_cols[s] + "' onclick='selectCellState(\"" + s + "\")'>" + s + "</div> ");
+        states_box.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + state_cols[s] + "' onclick='selectCellState(\"" + s + "\")'></div> ");
         console.log(states_box);
     });
 
