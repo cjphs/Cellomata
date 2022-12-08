@@ -13,6 +13,7 @@ let playing = false;
 let frame = 0;
 
 let selected_cell_state = "";
+let selected_cell_element = null;
 
 function draw() {
     for(var y = 0; y < grid_height; y++) {
@@ -43,6 +44,15 @@ cssAnim = function(element, animation) {
     canv.style.animation = animation; 
 }
 
+selectCellState = function(state) {
+    if (selected_cell_element != null)
+        selected_cell_element.style.boxShadow = "none";
+
+    selected_cell_element = document.getElementById(state);
+    selected_cell_element.style.boxShadow = "0 0 20px white";
+    selected_cell_state = state;
+}
+
 updateRules = function(reset=false) {
     var CA_rules = interpretRules();
 
@@ -53,7 +63,7 @@ updateRules = function(reset=false) {
     CA_rules.states.forEach(s => {
         console.log("huh");
         console.log(s);
-        states_box.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + state_cols[s] + "' onclick='selected_cell_state = \"" + s + "\"'>" + s + "</div> ");
+        states_box.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + state_cols[s] + "' onclick='selectCellState(\"" + s + "\")'>" + s + "</div> ");
         console.log(states_box);
     });
 
@@ -64,7 +74,10 @@ updateRules = function(reset=false) {
 
     if (reset_grid || reset) {
         CA_grid.resetGrid(only_override_nonexistant_states=true);
+        selectCellState(CA_rules.getDefaultState());
         draw();
+    } else {
+        selectCellState(selected_cell_state);
     }
 
     cssAnim("grid_canvas", "rules_save 1s")
