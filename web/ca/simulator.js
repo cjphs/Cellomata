@@ -41,6 +41,23 @@ class Transformation {
                     return (neighborhood_dict[this.locality_check_state] == this.locality_count);
                 break;
 
+            case "majority":
+                var most_neighbors_count = 0;
+                var most_neighbors_state = "";
+                
+                var keys = Object.keys(neighborhood_dict);
+
+                states.forEach(s => {
+                    if (neighborhood_dict[s] > most_neighbors_count) {
+                        most_neighbors_count = neighborhood_dict[s];
+                        most_neighbors_state = s;
+                    } 
+                });
+
+                return (most_neighbors_state == this.locality_check_state);
+
+                break;
+
             // directional
             default:
                 return (neighborhood_dict["*" + this.locality_check_type] == this.locality_check_state)

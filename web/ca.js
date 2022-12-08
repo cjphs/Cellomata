@@ -12,6 +12,8 @@ let playing = false;
 
 let frame = 0;
 
+let selected_cell_state = "";
+
 function draw() {
     for(var y = 0; y < grid_height; y++) {
         for(var x = 0; x < grid_width; x++) {
@@ -24,12 +26,11 @@ function draw() {
 }
 
 play = function() {
-    if (playing) {
-        if (frame++ % 10 == 0) 
-            evolveDraw();
-        
-        requestAnimationFrame(play);
+    if (playing && (frame++ % 10 == 0)) {
+        evolveDraw();
     }
+        
+    requestAnimationFrame(play);
 }
 
 cssAnim = function(element, animation) {
@@ -47,8 +48,9 @@ updateRules = function(reset=false) {
     states_box.innerHTML = "";
                     
     CA_rules.states.forEach(s => {
+        console.log("huh");
         console.log(s);
-        states_box .innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + state_cols[s] + "'>" + s + "</div> ");
+        states_box.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + state_cols[s] + "' onclick='selected_cell_state = \"" + s + "\"'>" + s + "</div> ");
         console.log(states_box);
     });
 
@@ -117,11 +119,9 @@ canvas.addEventListener('mousemove', e => {
         var cx = Math.floor(x/cell_width);
         var cy = Math.floor(y/cell_height);
 
-        if (false) {
-            console.log(document.getElementById("edit_box").value);
+        console.log(selected_cell_state);
+        CA_grid.setCellState(cx, cy, selected_cell_state);
 
-            CA_grid.setCellState(cx, cy, document.getElementById("edit_box").value);
-        }
         draw();
     }
 }, false);
