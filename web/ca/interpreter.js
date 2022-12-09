@@ -20,6 +20,8 @@ interpretRules = function() {
 
     var state_being_defined = "";
 
+    var variables = {};
+
     state_cols = {}
 
     // clean up
@@ -62,8 +64,11 @@ interpretRules = function() {
                     else if (elements.length > 1 & elements[1] == "becomes:") {
                         state_being_defined = elements[0];
                         interpreter_state = Modes.DEFINE_CONDITIONALS;
-
-                        console.log(state_being_defined);
+                    
+                    // new variable
+                    } else if (elements.length > 1 & elements[1] == "=") {
+                        variables[elements[0]] = elements[2];
+                        console.log(variables);
                     }
 
                     break;
@@ -85,6 +90,8 @@ interpretRules = function() {
                     var chance = 1;
                     if (elements.length > 1 && elements[1] == "with") {
                         if (elements[2] == "chance") {
+                            if (elements[3] in variables)
+                                elements[3] = variables[elements[3]];
                             chance = parseFloat(elements[3]);
                             elements.splice(1,3);
                         }
@@ -99,12 +106,20 @@ interpretRules = function() {
                             var locality = elements[2].split("*");
                             var locality_state = "";
                             var locality_count = -1;
-
-                            console.log(locality);
+                            var equality = "=";
 
                             if (locality.length == 1) 
                                 locality_state = elements[2];
                             else {
+                                if (locality[0][0] == ">" || locality[0][0] == "<") {
+                                    equality = locality[0][0];
+                                    locality[0] = locality[0].slice(1);
+                                }
+                                
+                                // get value from variables
+                                if (locality[0] in variables)
+                                    locality[0] = variables[locality[0]];
+
                                 locality_count = parseInt(locality[0]);
                                 locality_state = locality[1];
                             }
@@ -112,6 +127,8 @@ interpretRules = function() {
                             var locality_type = elements[3];
 
                             var transform = new Transformation(elements[0], locality_type, locality_state, locality_count, chance);
+                            transform.equality_type = equality;
+
                             ruleset.addRule(state_being_defined, transform);
 
                             if (prev_transform != null) {

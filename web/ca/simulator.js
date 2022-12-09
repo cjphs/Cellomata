@@ -19,6 +19,8 @@ class Transformation {
         this.conjucted_with = null;
 
         this.do_evaluation = true;
+
+        this.equality_type = "=";
     }
 
     conjunctWith = function(transformation) {
@@ -38,7 +40,12 @@ class Transformation {
                 if (this.locality_count == -1) 
                     return (neighborhood_dict[this.locality_check_state] > 0);
                 else
-                    return (neighborhood_dict[this.locality_check_state] == this.locality_count);
+                    if (this.equality_type == "<")
+                        return (neighborhood_dict[this.locality_check_state] < this.locality_count);
+                    else if (this.equality_type == ">")
+                        return (neighborhood_dict[this.locality_check_state] > this.locality_count);
+                    else
+                        return (neighborhood_dict[this.locality_check_state] == this.locality_count);
                 break;
 
             case "majority":
