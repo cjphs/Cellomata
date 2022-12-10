@@ -19,7 +19,7 @@ function draw() {
     for(var y = 0; y < grid_height; y++) {
         for(var x = 0; x < grid_width; x++) {
             ctx.fillStyle = state_cols[CA_grid.getCellState(x,y)];
-            ctx.fillRect(cell_width*x, cell_height*y, cell_width, cell_height);
+            ctx.fillRect(Math.floor(cell_width*x), Math.floor(cell_height*y), Math.ceil(cell_width), Math.ceil(cell_height));
             
             // ctx.strokeRect(cell_width*x, cell_height*y, cell_width, cell_height);
         }

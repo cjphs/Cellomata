@@ -51,8 +51,6 @@ class Transformation {
             case "majority":
                 var most_neighbors_count = 0;
                 var most_neighbors_state = "";
-                
-                var keys = Object.keys(neighborhood_dict);
 
                 states.forEach(s => {
                     if (neighborhood_dict[s] > most_neighbors_count) {
@@ -62,7 +60,6 @@ class Transformation {
                 });
 
                 return (most_neighbors_state == this.locality_check_state);
-
                 break;
 
             // directional
@@ -149,6 +146,9 @@ class Grid {
     }
 
     getCellState = function(x,y) {
+        x = (this.width + x) % this.width;
+        y = (this.height + y) % this.height;
+
         var state = "";
         if (this.coordinatesInBounds(x,y))
             state = this.grid[y][x];
@@ -176,8 +176,11 @@ class Grid {
                     for(var j = y-1; j < y+2; j++) {
                         if ((i == x && j == y))
                             continue;
-                        if (this.coordinatesInBounds(i,j))
-                            neighborhood_dict[this.getCellState(i,j)] += 1;
+                        // if (this.coordinatesInBounds(i,j))
+                        var state = this.getCellState(i,j);
+
+                        if (state != "")
+                            neighborhood_dict[state] += 1;
                     }
                 }
 
