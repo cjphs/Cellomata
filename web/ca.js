@@ -7,6 +7,11 @@ let grid_height = 64;
 let cell_width = canvas.clientWidth/grid_width;
 let cell_height = canvas.clientHeight/grid_height;
 
+function recalculateGridSize() {
+    cell_width = canvas.clientWidth/grid_width;
+    cell_height = canvas.clientHeight/grid_height;
+}
+
 let CA_grid = null;
 let playing = false;
 
@@ -61,10 +66,7 @@ updateRules = function(reset=false) {
     states_box.innerHTML = "";
                     
     CA_rules.states.forEach(s => {
-        console.log("huh");
-        console.log(s);
         states_box.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + state_cols[s] + "' onclick='selectCellState(\"" + s + "\")'></div> ");
-        console.log(states_box);
     });
 
     if (CA_grid == null)
@@ -73,14 +75,21 @@ updateRules = function(reset=false) {
         CA_grid.rules = CA_rules;
 
     if (reset_grid || reset) {
-        CA_grid.resetGrid(only_override_nonexistant_states=true);
-        selectCellState(CA_rules.getDefaultState());
-        draw();
+        if (recalc_grid_size)
+            recalculateGridSize();
+
+        resetGrid(CA_rules);
     } else {
         selectCellState(selected_cell_state);
     }
 
     cssAnim("grid_canvas", "rules_save 1s")
+}
+
+resetGrid = function(CA_rules) {
+    CA_grid.resetGrid(only_override_nonexistant_states=true);
+    selectCellState(CA_rules.getDefaultState());
+    draw();
 }
 
 evolveDraw = function() {

@@ -8,6 +8,7 @@ const Modes = {
 
 let state_cols = {}
 let reset_grid = false;
+let recalc_grid_size = false;
 
 let states = [];
 
@@ -23,6 +24,8 @@ interpretRules = function() {
     var variables = {};
 
     state_cols = {}
+
+    recalc_grid_size = false;
 
     // clean up
     lines = inputbox.value.split("\n");
@@ -57,6 +60,26 @@ interpretRules = function() {
 
                 case Modes.SKIP:
                     elements = line.split(" ");
+
+                    if (elements[0] == "@width") {
+                        var w = parseInt(elements[1]);
+
+                        if (w != grid_width) {
+                            grid_width = w;
+                            reset_grid = true;
+                            recalc_grid_size = true;
+                        }
+                    }
+
+                    if (elements[0] == "@height") {
+                        var h = parseInt(elements[1]);
+
+                        if (h != grid_height) {
+                            grid_height = h;
+                            reset_grid = true;
+                            recalc_grid_size = true;
+                        }
+                    }
 
                     if (elements[0] == "@colors")
                         interpreter_state = Modes.COLORS
