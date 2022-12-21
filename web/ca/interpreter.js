@@ -62,23 +62,37 @@ interpretRules = function() {
                     elements = line.split(" ");
 
                     if (elements[0] == "@width") {
-                        var w = parseInt(elements[1]);
+                        var w;
+
+                        if (elements[1] in variables)
+                            w = parseInt(variables[elements[1]]);
+                        else
+                            w = parseInt(elements[1]);
 
                         if (w != grid_width) {
                             grid_width = w;
                             reset_grid = true;
                             recalc_grid_size = true;
                         }
-                    }
+                    }else if (elements[0] == "@height") {
+                        var h;
 
-                    if (elements[0] == "@height") {
-                        var h = parseInt(elements[1]);
+                        if (elements[1] in variables)
+                            h = parseInt(variables[elements[1]]);
+                        else
+                            h = parseInt(elements[1]);
 
                         if (h != grid_height) {
                             grid_height = h;
                             reset_grid = true;
                             recalc_grid_size = true;
                         }
+                    }
+
+                    else if (elements[0] == "@wrap") {
+                        var wrap = (elements[1] === 'true');
+
+                        CA_grid.wrap = wrap;
                     }
 
                     if (elements[0] == "@colors")

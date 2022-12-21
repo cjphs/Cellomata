@@ -8,8 +8,15 @@ let cell_width = canvas.clientWidth/grid_width;
 let cell_height = canvas.clientHeight/grid_height;
 
 function recalculateGridSize() {
+    playing = false;
+
     cell_width = canvas.clientWidth/grid_width;
     cell_height = canvas.clientHeight/grid_height;
+
+    CA_grid.width = grid_width;
+    CA_grid.height = grid_height;
+
+    resetGrid(CA_rules,false);
 }
 
 let CA_grid = null;
@@ -58,8 +65,10 @@ selectCellState = function(state) {
     selected_cell_state = state;
 }
 
+let CA_rules = null;
+
 updateRules = function(reset=false) {
-    var CA_rules = interpretRules();
+    CA_rules = interpretRules();
 
     var states_box = document.getElementById("state_picker");
     
@@ -86,8 +95,8 @@ updateRules = function(reset=false) {
     cssAnim("grid_canvas", "rules_save 1s")
 }
 
-resetGrid = function(CA_rules) {
-    CA_grid.resetGrid(only_override_nonexistant_states=true);
+resetGrid = function(CA_rules,existent_states=true) {
+    CA_grid.resetGrid(only_override_nonexistant_states=existent_states);
     selectCellState(CA_rules.getDefaultState());
     draw();
 }

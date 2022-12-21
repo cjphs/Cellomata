@@ -112,6 +112,8 @@ class Grid {
 
         this.rules = rules;
 
+        this.wrap = true;
+
         this.grid = this.getEmptyGrid();
     }
 
@@ -146,8 +148,10 @@ class Grid {
     }
 
     getCellState = function(x,y) {
-        x = (this.width + x) % this.width;
-        y = (this.height + y) % this.height;
+        if (this.wrap) {
+            x = (this.width + x) % this.width;
+            y = (this.height + y) % this.height;
+        }
 
         var state = "";
         if (this.coordinatesInBounds(x,y))
