@@ -6,11 +6,31 @@ const Modes = {
     COLORS: 100
 }
 
+const SYNTAX_WITH = ["with", "w/", "w"];
+const SYNTAX_CHANCE = ["chance", "probability", "prob", "%"];
+const SYNTAX_BECOMES = ["becomes:", "->", ":"];
+
+const SYNTAX_SIM_WIDTH = ["@width", "@w"];
+const SYNTAX_SIM_HEIGHT = ["@height", "@h"];
+const SYNTAX_SIM_WRAP = ["@wrap"];
+const SYNTAX_SIM_COLOURS = ["@colors", "@colours"];
+
 let state_cols = {}
 let reset_grid = false;
 let recalc_grid_size = false;
 
 let states = [];
+
+checkSyntaxPart = function(part, syntax_list) {
+
+    var t = (part.toLowerCase() in syntax_list)
+
+    var t = syntax_list.includes(part.toLowerCase());
+    
+    console.log("Syntax part  " + part + " " + syntax_list + " " + t);
+
+    return t;
+}
 
 interpretRules = function() {
     var inputbox = document.getElementById("rule_input_box");
@@ -61,7 +81,7 @@ interpretRules = function() {
                 case Modes.SKIP:
                     elements = line.split(" ");
 
-                    if (elements[0] == "@width") {
+                    if (checkSyntaxPart(elements[0], SYNTAX_SIM_WIDTH)) {
                         var w;
 
                         if (elements[1] in variables)
@@ -74,7 +94,7 @@ interpretRules = function() {
                             reset_grid = true;
                             recalc_grid_size = true;
                         }
-                    }else if (elements[0] == "@height") {
+                    }else if (checkSyntaxPart(elements[0], SYNTAX_SIM_HEIGHT)) {
                         var h;
 
                         if (elements[1] in variables)
@@ -89,16 +109,16 @@ interpretRules = function() {
                         }
                     }
 
-                    else if (elements[0] == "@wrap") {
+                    else if (checkSyntaxPart(elements[0], SYNTAX_SIM_WRAP)) {
                         var wrap = (elements[1] === 'true');
 
                         CA_grid.wrap = wrap;
                     }
 
-                    if (elements[0] == "@colors")
+                    if (checkSyntaxPart(elements[0], SYNTAX_SIM_COLOURS))
                         interpreter_state = Modes.COLORS
 
-                    else if (elements.length > 1 & (elements[1] == "becomes:" || elements[1] == "->") ) {
+                    else if (elements.length > 1 && checkSyntaxPart(elements[1], SYNTAX_BECOMES)) {
                         state_being_defined = elements[0];
                         interpreter_state = Modes.DEFINE_CONDITIONALS;
                     
@@ -125,8 +145,8 @@ interpretRules = function() {
                     }
 
                     var chance = 1;
-                    if (elements.length > 1 && elements[1] == "with") {
-                        if (elements[2] == "chance") {
+                    if (elements.length > 1 && checkSyntaxPart(elements[1], SYNTAX_WITH)) {
+                        if (checkSyntaxPart(elements[2], SYNTAX_CHANCE)) {
                             if (elements[3] in variables)
                                 elements[3] = variables[elements[3]];
                             chance = parseFloat(elements[3]);
@@ -194,4 +214,10 @@ interpretRules = function() {
     });
 
     return ruleset;
+}
+
+function checkVariable(value) {
+    if (value in variables)
+        value = variables[value];
+    return value;
 }

@@ -1,0 +1,24 @@
+Nil, R, P, S
+@colours
+black, red, orange, yellow
+
+t = 2
+p = .8
+
+Nil ->
+R w % 0.3
+P w % 0.3
+S w % 0.3
+Nil.
+
+R ->
+P w % p if >t*P nearby
+R.
+
+P ->
+S w % p if >t*S nearby
+P.
+
+S ->
+R w % p if >t*R nearby
+S.
