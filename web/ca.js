@@ -67,6 +67,10 @@ selectCellState = function(state) {
 
 let CA_rules = null;
 
+updateRulesFromString = function(rule_string) {
+
+}
+
 updateRules = function(reset=false) {
     CA_rules = interpretRules();
 
@@ -153,7 +157,6 @@ canvas.addEventListener('mousemove', e => {
         var cx = Math.floor(x/cell_width);
         var cy = Math.floor(y/cell_height);
 
-        console.log(selected_cell_state);
         CA_grid.setCellState(cx, cy, selected_cell_state);
 
         draw();

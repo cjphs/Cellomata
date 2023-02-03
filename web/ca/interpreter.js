@@ -98,7 +98,7 @@ interpretRules = function() {
                     if (elements[0] == "@colors")
                         interpreter_state = Modes.COLORS
 
-                    else if (elements.length > 1 & elements[1] == "becomes:") {
+                    else if (elements.length > 1 & (elements[1] == "becomes:" || elements[1] == "->") ) {
                         state_being_defined = elements[0];
                         interpreter_state = Modes.DEFINE_CONDITIONALS;
                     
