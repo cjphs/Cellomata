@@ -164,6 +164,11 @@ interpretRules = function() {
                             var locality_state = "";
                             var locality_count = -1;
                             var equality = "=";
+                            
+                            var locality_range_min = 0;
+                            var locality_range_max = 9;
+
+                            var locality_type_single_value = true;
 
                             if (locality.length == 1) 
                                 locality_state = elements[2];
@@ -177,7 +182,8 @@ interpretRules = function() {
                                 if (locality[0] in variables)
                                     locality[0] = variables[locality[0]];
 
-                                locality_count = parseInt(locality[0]);
+                                locality_count = parseInt(locality[0]);                                
+                                
                                 locality_state = locality[1];
                             }
 

@@ -1,5 +1,5 @@
 class Transformation {
-    constructor(transform_state, locality_check_type, locality_check_state="", locality_count=-1, chance=1) {
+    constructor(transform_state, locality_check_type, locality_check_state="", locality_count=-1, chance=1, locality_range_min=0, locality_range_max=9) {
         // End state of the cell, should this transformation be successful
         this.transform_state = transform_state;
 
@@ -11,6 +11,10 @@ class Transformation {
 
         // How many cells of the locality check state should be in the neighborhood (-1 = any amount but 0)
         this.locality_count = locality_count;
+
+        this.locality_range_min = locality_range_min;
+
+        this.locality_range_max = locality_range_max;
 
         // Chance of the transformation occuring (for probabilistic CA)
         this.chance = chance;
