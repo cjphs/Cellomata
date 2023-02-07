@@ -22,13 +22,8 @@ let recalc_grid_size = false;
 let states = [];
 
 checkSyntaxPart = function(part, syntax_list) {
-
-    var t = (part.toLowerCase() in syntax_list)
-
     var t = syntax_list.includes(part.toLowerCase());
     
-    console.log("Syntax part  " + part + " " + syntax_list + " " + t);
-
     return t;
 }
 
@@ -161,29 +156,69 @@ interpretRules = function() {
 
                         while(!done) {
                             var locality = elements[2].split("*");
-                            var locality_state = "";
-                            var locality_count = -1;
-                            var equality = "=";
 
-                            if (locality.length == 1) 
+                            console.log(locality);
+
+                            let locality_state = "";
+                            let locality_count = -1;
+                            let equality = "=";
+
+                            let locality_min = 0;
+                            let locality_max = 9;
+
+                            if (locality.length == 1) {
                                 locality_state = elements[2];
-                            else {
-                                if (locality[0][0] == ">" || locality[0][0] == "<") {
+                            } else {
+                                if (locality[0][0] == "[" && locality[0][2] == "," && locality[0][4] == "]") {
+                                    locality[0] = locality[0].substring(1, locality[0].length - 1);
+
+                                    let r = locality[0].split(",");
+                                    
+                                    if (r[0] in variables)
+                                        r[0] = variables[r[0]];
+
+                                    if (r[1] in variables)
+                                        r[1] = variables[r[1]];
+
+                                    locality_min = parseInt(r[0]);
+                                    locality_max = parseInt(r[1]);
+
+                                    if (locality_max < locality_min) {
+                                        let t = locality_max;
+                                        locality_max = locality_min;
+                                        locality_min = t;
+                                    }
+
+                                } else if (locality[0][0] == ">") {
                                     equality = locality[0][0];
                                     locality[0] = locality[0].slice(1);
-                                }
-                                
-                                // get value from variables
-                                if (locality[0] in variables)
-                                    locality[0] = variables[locality[0]];
 
-                                locality_count = parseInt(locality[0]);
+                                    if (locality[0] in variables)
+                                        locality[0] = variables[locality[0]];
+
+                                    locality_min = parseInt(locality[0]);
+                                } else if (locality[0][0] == "<") {
+                                    equality = locality[0][0];
+                                    locality[0] = locality[0].slice(1);
+
+                                    if (locality[0] in variables)
+                                        locality[0] = variables[locality[0]];
+
+                                    locality_max = parseInt(locality[0]);
+                                } else {
+                                    // TODO: Check if locality = number
+                                    locality_min = locality[0];
+                                    locality_max = locality[0];
+                                }
+
                                 locality_state = locality[1];
                             }
 
-                            var locality_type = elements[3];
+                            let locality_type = elements[3];
 
-                            var transform = new Transformation(elements[0], locality_type, locality_state, locality_count, chance);
+                            let transform = new Transformation(elements[0], locality_type, locality_state, locality_count, chance, locality_check_min=locality_min, locality_check_max=locality_max);
+                           
+                            console.log(locality_min + " " + locality_max);
                             transform.equality_type = equality;
 
                             ruleset.addRule(state_being_defined, transform);
@@ -212,6 +247,8 @@ interpretRules = function() {
             }
         }
     });
+
+    console.log(ruleset);
 
     return ruleset;
 }

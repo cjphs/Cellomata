@@ -1,5 +1,5 @@
 class Transformation {
-    constructor(transform_state, locality_check_type, locality_check_state="", locality_count=-1, chance=1) {
+    constructor(transform_state, locality_check_type, locality_check_state="", locality_count=-1, chance=1, locality_check_min=0, locality_check_max=9) {
         // End state of the cell, should this transformation be successful
         this.transform_state = transform_state;
 
@@ -8,6 +8,9 @@ class Transformation {
 
         // State to look for in the locality check
         this.locality_check_state = locality_check_state;
+
+        this.locality_check_min = locality_check_min;
+        this.locality_check_max = locality_check_max;
 
         // How many cells of the locality check state should be in the neighborhood (-1 = any amount but 0)
         this.locality_count = locality_count;
@@ -37,15 +40,9 @@ class Transformation {
                 return true;
             
             case "nearby":
-                if (this.locality_count == -1) 
-                    return (neighborhood_dict[this.locality_check_state] > 0);
-                else
-                    if (this.equality_type == "<")
-                        return (neighborhood_dict[this.locality_check_state] < this.locality_count);
-                    else if (this.equality_type == ">")
-                        return (neighborhood_dict[this.locality_check_state] > this.locality_count);
-                    else
-                        return (neighborhood_dict[this.locality_check_state] == this.locality_count);
+                let n = neighborhood_dict[this.locality_check_state];
+
+                return (this.locality_check_min <= n) && (n <= this.locality_check_max);
                 break;
 
             case "majority":
@@ -71,7 +68,7 @@ class Transformation {
 
                 break;
         }
-        return false;
+        return false; 
     }
 }
 
