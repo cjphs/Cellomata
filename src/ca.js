@@ -70,10 +70,6 @@ selectCellState = function(state) {
 
 let CA_rules = null;
 
-updateRulesFromString = function(rule_string) {
-
-}
-
 updateRules = function(reset=false) {
     CA_rules = interpretRules();
 

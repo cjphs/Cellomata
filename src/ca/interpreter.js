@@ -43,7 +43,7 @@ interpretRules = function() {
     lines = inputbox.value.split("\n");
 
     lines.forEach(line => {
-        if (line.charAt(0) != "#") {
+        if (line.charAt(0) != "#" && line.trim() != "") {
 
             switch(interpreter_state) {
 
@@ -160,12 +160,8 @@ interpretRules = function() {
 
                         var prev_transform = null;
 
-                        console.log("help me");
-
                         while(!done) {
                             var locality = elements[2].split("*");
-
-                            console.log("wtf");
 
                             let locality_state = "";
                             let locality_count = -1;
@@ -176,44 +172,12 @@ interpretRules = function() {
 
                             let r = checkValue(locality[0]);
 
-                            console.log("FFFFF");
-                            console.log(r);
-
                             locality_min = r[0];
                             locality_max = r[1];
 
                             locality_state = locality[1];
 
                             locality_type = elements[3];
-
-                            // if (locality.length == 1) {
-                            //     locality_state = elements[2];
-                            // } else {
-                            //     let 
-                                // } else if (locality[0][0] == ">") {
-                                //     equality = locality[0][0];
-                                //     locality[0] = locality[0].slice(1);
-
-                                //     if (locality[0] in variables)
-                                //         locality[0] = variables[locality[0]];
-
-                                //     locality_min = parseInt(locality[0]);
-                                // } else if (locality[0][0] == "<") {
-                                //     equality = locality[0][0];
-                                //     locality[0] = locality[0].slice(1);
-
-                                //     if (locality[0] in variables)
-                                //         locality[0] = variables[locality[0]];
-
-                                //     locality_max = parseInt(locality[0]);
-                                // } else {
-                                //     // TODO: Check if locality = number
-                                //     locality_min = locality[0];
-                                //     locality_max = locality[0];
-                                // }
-
-                            //    
-                            // }
 
                             let transform = new Transformation(elements[0], locality_type, locality_state, locality_count, chance, locality_check_min=locality_min, locality_check_max=locality_max);
                            
@@ -246,8 +210,6 @@ interpretRules = function() {
             }
         }
     });
-
-    console.log(ruleset);
 
     return ruleset;
 }
