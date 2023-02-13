@@ -1,124 +1,4 @@
-<style>
-
-html, body {
-    background-color: rgb(27, 27, 27);
-    margin: 0;
-    padding: 0;
-    text-align: center; 
-    overflow: hidden;
-}
-
-.container {
-    white-space: nowrap;
-    position: relative;
-    margin: 0px;
-    display: inline-block;
-    vertical-align: middle;
-    margin: 0px 200px 0px 0px;
-
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-
-a {
-    text-decoration: none;
-}
-
-a:link, a:visited {
-    color: rgb(10, 194, 255)
-}
-
-button {
-    color: white;
-    background-color: rgb(61, 65, 68);
-    border: none;
-}
-
-button:hover {
-    background-color: rgb(77, 83, 87);
-}
-
-.vcontainer {
-    width: 400px;
-    display: inline-block;
-    vertical-align: middle;
-    padding-left:10px;
-}
-
-.settings {
-    height: 50px;
-}
-
-.editor {
-    font-family: 'Courier New', Courier, monospace;
-}
-
-.state_picker {
-    width: 100%;
-    height: 90px;
-    align-items: center;
-    overflow-y: hidden;
-    overflow-x: scroll;
-}
-
-.state_picker .state {
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    margin-top: 5px;
-    background-color: aqua;
-    user-select: none;
-}
-
-.state_picker .state:hover {
-    cursor:pointer;
-}
-
-.simulator {
-    display: inline-block;
-    vertical-align: middle;
-    width: 500px;
-    margin: 0;
-}
-
-#rule_input_box {
-    color: white;
-    border-style: none;
-    padding: 10px;
-    font-size:large;
-    height:500px;
-    width:100%;
-    background-color: rgb(75, 75, 75);
-}
-
-@keyframes rules_save {
-    from {
-        box-shadow: 0 0 20px lime;
-    }
-
-    to {
-        box-shadow: 0 0 0px black;
-    }
-}
-
-@keyframes grid_clear {
-    from {
-        box-shadow: 0 0 20px aqua;
-    }
-
-    to {
-        box-shadow: 0 0 0px black;
-    }
-}
-
-.controls {
-    height: 10%;
-}
-
-#grid_canvas {
-    margin:20px;
-    animation: rules_save 1s;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 
 <script src="ca/simulator.js"></script>
 <script src="ca/interpreter.js"></script>
@@ -126,17 +6,26 @@ button:hover {
 <html>
     <body>
         <div class="container">
-            <div class="vcontainer">
-                <div style="height:100px"></div>
-                <!-- <div class="settings">
-                    Settings
-                    <select id="edit_box">
-                        <option value=""></option>
-                        <option value="">2</option>
-                    </select>
-                </div> -->
+            <!-- Simulation panel (grid) -->
+            <div class="simulator" style="margin: 15px">
+                <div class="state_picker" id="state_picker"> </div>
+
+                <div class="grid">
+                    <canvas width="600" height="600" id="grid_canvas" style="margin: 0"> </canvas>
+                </div>
+
+                <div class="controls">
+                    <button style="width:100px; height:50%; margin-top: 10px" onclick="evolveDraw()">Step</button> | 
+                    <button style="width:100px; height:50%; margin-top: 10px" onclick="playing = !playing; play()">Play</button>
+                </div>
+
+                
+            </div>
+
+            <!-- RULE INTERPRETER -->
+            <div class="vcontainer" style="position: absolute; top: 105px; right:100%">
                 <div class="editor">
-                    <textarea id="rule_input_box" style="resize:vertical">
+                    <textarea id="rule_input_box" style="resize:vertical; height:600px">
 Dead, Alive
 @colors
 black, white
@@ -156,23 +45,12 @@ Dead otherwise.</textarea>
                 </div>
             </div>
 
-
-            <!-- Simulation panel (grid) -->
-            <div class="simulator" style="margin: 15px">
-                <div class="state_picker" id="state_picker"> </div>
-
-                <div class="grid">
-                    <canvas width="500" height="500" id="grid_canvas" style="margin: 0"> </canvas>
-                </div>
-
-                <div class="controls">
-                    <button style="width:100px; height:50%; margin-top: 10px" onclick="evolveDraw()">Step</button> | 
-                    <button style="width:100px; height:50%; margin-top: 10px" onclick="playing = !playing; play()">Play</button>
-                </div>
+            <div style="color:white; font-family:Arial">
+                Created by Christopher Schiffmann
             </div>
 
             
-            <div style="display:inline-block; width:200px; vertical-align:top; text-align: left; color:white">
+            <!-- <div style="display:inline-block; width:200px; vertical-align:top; text-align: left; color:white">
                 <div style="height:100px"></div>
                 <p>
                     by <a href="https://cjphs.github.io/" target="_blank">Christopher Schiffmann</a>
@@ -180,7 +58,7 @@ Dead otherwise.</textarea>
 
                 <p>
                 </p>
-            </div>
+            </div> -->
         </div>
     </body>
 </html>
