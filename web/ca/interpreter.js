@@ -6,14 +6,15 @@ const Modes = {
     COLORS: 100
 }
 
-const SYNTAX_WITH = ["with", "w/", "w"];
-const SYNTAX_CHANCE = ["chance", "probability", "prob", "%"];
-const SYNTAX_BECOMES = ["becomes:", "->", ":"];
+const SYNTAX_WITH           = ["with", "w/", "w"];
+const SYNTAX_CHANCE         = ["chance", "probability", "prob", "%"];
+const SYNTAX_BECOMES        = ["becomes:", "->", ":"];
+const SYNTAX_AND            = ["and", "&"]
 
-const SYNTAX_SIM_WIDTH = ["@width", "@w"];
-const SYNTAX_SIM_HEIGHT = ["@height", "@h"];
-const SYNTAX_SIM_WRAP = ["@wrap"];
-const SYNTAX_SIM_COLOURS = ["@colors", "@colours"];
+const SYNTAX_SIM_WIDTH      = ["@width", "@w"];
+const SYNTAX_SIM_HEIGHT     = ["@height", "@h"];
+const SYNTAX_SIM_WRAP       = ["@wrap"];
+const SYNTAX_SIM_COLOURS    = ["@colors", "@colours"];
 
 let state_cols = {}
 let reset_grid = false;
@@ -21,11 +22,7 @@ let recalc_grid_size = false;
 
 let states = [];
 
-checkSyntaxPart = function(part, syntax_list) {
-    var t = syntax_list.includes(part.toLowerCase());
-    
-    return t;
-}
+let variables = {};
 
 interpretRules = function() {
     var inputbox = document.getElementById("rule_input_box");
@@ -36,7 +33,7 @@ interpretRules = function() {
 
     var state_being_defined = "";
 
-    var variables = {};
+    variables = {};
 
     state_cols = {}
 
@@ -166,55 +163,42 @@ interpretRules = function() {
                             let locality_min = 0;
                             let locality_max = 9;
 
-                            if (locality.length == 1) {
-                                locality_state = elements[2];
-                            } else {
-                                if (locality[0][0] == "[" && locality[0][2] == "," && locality[0][4] == "]") {
-                                    locality[0] = locality[0].substring(1, locality[0].length - 1);
+                            let r = checkValue(locality[0]);
+                            locality_min = r[0];
+                            locality_max = r[1];
 
-                                    let r = locality[0].split(",");
-                                    
-                                    if (r[0] in variables)
-                                        r[0] = variables[r[0]];
+                            locality_state = locality[1];
 
-                                    if (r[1] in variables)
-                                        r[1] = variables[r[1]];
+                            locality_type = "nearby";
 
-                                    locality_min = parseInt(r[0]);
-                                    locality_max = parseInt(r[1]);
+                            // if (locality.length == 1) {
+                            //     locality_state = elements[2];
+                            // } else {
+                            //     let 
+                                // } else if (locality[0][0] == ">") {
+                                //     equality = locality[0][0];
+                                //     locality[0] = locality[0].slice(1);
 
-                                    if (locality_max < locality_min) {
-                                        let t = locality_max;
-                                        locality_max = locality_min;
-                                        locality_min = t;
-                                    }
+                                //     if (locality[0] in variables)
+                                //         locality[0] = variables[locality[0]];
 
-                                } else if (locality[0][0] == ">") {
-                                    equality = locality[0][0];
-                                    locality[0] = locality[0].slice(1);
+                                //     locality_min = parseInt(locality[0]);
+                                // } else if (locality[0][0] == "<") {
+                                //     equality = locality[0][0];
+                                //     locality[0] = locality[0].slice(1);
 
-                                    if (locality[0] in variables)
-                                        locality[0] = variables[locality[0]];
+                                //     if (locality[0] in variables)
+                                //         locality[0] = variables[locality[0]];
 
-                                    locality_min = parseInt(locality[0]);
-                                } else if (locality[0][0] == "<") {
-                                    equality = locality[0][0];
-                                    locality[0] = locality[0].slice(1);
+                                //     locality_max = parseInt(locality[0]);
+                                // } else {
+                                //     // TODO: Check if locality = number
+                                //     locality_min = locality[0];
+                                //     locality_max = locality[0];
+                                // }
 
-                                    if (locality[0] in variables)
-                                        locality[0] = variables[locality[0]];
-
-                                    locality_max = parseInt(locality[0]);
-                                } else {
-                                    // TODO: Check if locality = number
-                                    locality_min = locality[0];
-                                    locality_max = locality[0];
-                                }
-
-                                locality_state = locality[1];
-                            }
-
-                            let locality_type = elements[3];
+                            //    
+                            // }
 
                             let transform = new Transformation(elements[0], locality_type, locality_state, locality_count, chance, locality_check_min=locality_min, locality_check_max=locality_max);
                            
@@ -228,7 +212,7 @@ interpretRules = function() {
                                 transform.do_evaluation = false;
                             }
 
-                            if (elements.length > 4 && elements[4] == "and") {
+                            if (elements.length > 4 && checkSyntaxPart(elements[4], SYNTAX_AND)) {
                                 prev_transform = transform;
                                 elements.splice(2,3);
                             } else {
@@ -253,8 +237,50 @@ interpretRules = function() {
     return ruleset;
 }
 
+// Check string to see if it's an integer or an integer range
+function checkValue(val) {
+    let min_value, max_value;
+
+    // range
+    if (val[0] == "[" && val[val.length-1] == "]") {
+        val = val.substring(1, val.length - 1);
+        val = val.split(",");
+
+        console.log("test");
+        console.log(val);
+
+        min_value = checkVariable(val[0].trim());
+        max_value = checkVariable(val[1].trim());
+
+    // TODO
+    } else if (val[0] == ">") {
+        max_value = Infinity;
+
+    } else if (val[0] == "<") {
+        min_value = 0;
+    }
+
+    // single integer value
+    else {
+        min_value = checkVariable(val);
+        max_value = min_value;
+    }
+
+    return [min_value, max_value];
+}
+
 function checkVariable(value) {
     if (value in variables)
         value = variables[value];
+    else
+        return parseInt(value);
     return value;
+}
+
+
+
+checkSyntaxPart = function(part, syntax_list) {
+    var t = syntax_list.includes(part.toLowerCase());
+    
+    return t;
 }

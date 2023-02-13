@@ -2,6 +2,7 @@
 
 <script src="ca/simulator.js"></script>
 <script src="ca/interpreter.js"></script>
+<script src="presets.js"></script>
 
 <html>
     <body>
@@ -23,7 +24,15 @@
             </div>
 
             <!-- RULE INTERPRETER -->
-            <div class="vcontainer" style="position: absolute; top: 105px; right:100%">
+            <div class="vcontainer" style="position: absolute; right:100%">
+                <div style="height:105px">
+                    <select id="template_selection_box" style="position:absolute; left:0; top:80px" onchange="newTemplate()">
+                        <option value="life">Game of Life</option>
+                        <option value="rockpaperscissors">Rock Paper Scissors</option>
+                        <option value="wave">Wave Machine</option>
+                    </select>
+                </div>
+
                 <div class="editor">
                     <textarea id="rule_input_box" style="resize:vertical; height:600px">
 Dead, Alive
