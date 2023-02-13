@@ -39,23 +39,23 @@ Paper with chance .3
 Scissors with chance .3
 Nil.
 
-t = 2
-p = .8
+t = 3
+p = 1
 
 Rock ->
-Paper with prob p if [t,8]*Paper nearby
+Paper with prob p if >=t*Paper nearby
 Rock otherwise.
 
 Paper ->
-Scissors with prob p if [t,8]*Scissors nearby
+Scissors with prob p if >=t*Scissors nearby
 Paper otherwise.
 
 Scissors ->
-Rock with prob p if [t,8]*Rock nearby
+Rock with prob p if >=t*Rock nearby
 Scissors otherwise.
 
-@width 64
-@height 64
+@width 100
+@height 100
 @wrap false`);
 
 function loadPreset(preset_id) {

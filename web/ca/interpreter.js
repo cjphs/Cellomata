@@ -25,13 +25,13 @@ let states = [];
 let variables = {};
 
 interpretRules = function() {
-    var inputbox = document.getElementById("rule_input_box");
+    let inputbox = document.getElementById("rule_input_box");
 
-    var interpreter_state = Modes.READ_STATES;
+    let interpreter_state = Modes.READ_STATES;
 
-    var ruleset = null;
+    let ruleset = null;
 
-    var state_being_defined = "";
+    let state_being_defined = "";
 
     variables = {};
 
@@ -39,14 +39,16 @@ interpretRules = function() {
 
     recalc_grid_size = false;
 
-    // clean up
+    // Split input into array of strings
     lines = inputbox.value.split("\n");
 
     lines.forEach(line => {
         if (line.charAt(0) != "#") {
+
             switch(interpreter_state) {
+
                 case Modes.READ_STATES:
-                    var new_states = line.split(", ");
+                    let new_states = line.replaceAll(" ","").split(",");
 
                     var state_count = 0;
                     new_states.forEach(ns => {
@@ -62,7 +64,7 @@ interpretRules = function() {
                     break;
 
                 case Modes.COLORS:
-                    var cols = line.split(", ")
+                    var cols = line.replaceAll(" ","").split(",");
                     var i = 0;
                     states.forEach(s => {
                         state_cols[s] = cols[i++];
@@ -250,27 +252,43 @@ interpretRules = function() {
     return ruleset;
 }
 
-// Check string to see if it's an integer or an integer range
+/**
+ * This function receives a string value and checks if it represents some kind of value (number? range? variable?)
+ * @param {string} val The value to be checked (does this represent a variable/number/range?)
+ * @returns {[number,number]} range of minimum value & maximum value
+ */
 function checkValue(val) {
     let min_value, max_value;
-
-    // range
+    
+    // Range
     if (val[0] == "[" && val[val.length-1] == "]") {
         val = val.substring(1, val.length - 1);
         val = val.split(",");
 
-        console.log("test");
-        console.log(val);
+        min_value = checkVariable(val[0]);
+        max_value = checkVariable(val[1]);
 
-        min_value = checkVariable(val[0].trim());
-        max_value = checkVariable(val[1].trim());
+    // Inequalities
+    } else if (val[0] == ">" || val[0] == "<") {
+        let eq = (val[1] == "=")
+        let inequality_type = val[0];
+        
+        val = val.substring((eq ? 2 : 1), val.length)
 
-    // TODO
-    } else if (val[0] == ">") {
-        max_value = Infinity;
+        if (inequality_type == ">") {
+            min_value = checkVariable(val);
+            max_value = Infinity;
+            
+            if (!eq)
+                min_value += 1;
 
-    } else if (val[0] == "<") {
-        min_value = 0;
+        } else if (inequality_type == "<") {
+            min_value = 0;
+            max_value = checkVariable(val)
+
+            if (!eq)
+                max_value += 1;
+        }
     }
 
     // single integer value
@@ -282,19 +300,26 @@ function checkValue(val) {
     return [min_value, max_value];
 }
 
+/**
+ * Check if a symbol exists as a variable known to the interpreter.
+ * @param {string} value Potential variable name
+ * @returns {number} The integer value associated with the variable
+ */
 function checkVariable(value) {
     if (value in variables)
-        value = variables[value];
+        return parseInt(variables[value]);
     else
         return parseInt(value);
-    return value;
 }
 
-
-
+/**
+ * Check if a particular token belongs to a list of syntax tokens (e.g., "->" and "becomes:" are both valid for rule declarations).
+ * @param {string} part Syntax token
+ * @param {Array} syntax_list The constant syntax list of which to check membership
+ * @returns {boolean} True if 'part' is in 'syntax_list'. 
+ */
 checkSyntaxPart = function(part, syntax_list) {
     var t = syntax_list.includes(part.toLowerCase());
-    
     return t;
 }
 
