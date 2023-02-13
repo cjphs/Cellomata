@@ -1,5 +1,10 @@
 CA Script is a cellular automata simulator & editor with simple rule-set scripting using a custom notation language. 
 
+## Features
+
+- Probability clauses
+- 
+
 ## The technical nitty-gritty
 
 This project is divided into two parts:
