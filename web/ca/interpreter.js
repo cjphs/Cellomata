@@ -104,7 +104,9 @@ interpretRules = function() {
                     else if (checkSyntaxPart(elements[0], SYNTAX_SIM_WRAP)) {
                         var wrap = (elements[1] === 'true');
 
-                        CA_grid.wrap = wrap;
+                        if (CA_grid != null) {
+                            CA_grid.wrap = wrap;
+                        }
                     }
 
                     if (checkSyntaxPart(elements[0], SYNTAX_SIM_COLOURS))
@@ -123,6 +125,8 @@ interpretRules = function() {
                     break;
 
                 case Modes.DEFINE_CONDITIONALS:
+                    interpreterLog("DEFINE_CONDITIONALS");
+
                     elements = line.split(" ");
 
                     console.log(elements[elements.length-1].slice(-1));
@@ -130,6 +134,7 @@ interpretRules = function() {
                     var termination = false;
                     
                     if (elements[elements.length-1].slice(-1) == ".") {
+                        interpreterLog("TERMINATION " + elements[0]);
                         if (elements.length == 1)
                             elements[0] = elements[0].slice(0, -1);
 
@@ -139,6 +144,7 @@ interpretRules = function() {
                     var chance = 1;
                     if (elements.length > 1 && checkSyntaxPart(elements[1], SYNTAX_WITH)) {
                         if (checkSyntaxPart(elements[2], SYNTAX_CHANCE)) {
+                            interpreterLog("CHANCE");
                             if (elements[3] in variables)
                                 elements[3] = variables[elements[3]];
                             chance = parseFloat(elements[3]);
@@ -147,14 +153,17 @@ interpretRules = function() {
                     }
 
                     if (elements.length > 1 && elements[1] == "if") {
+                        interpreterLog("IF");
                         var done = false;
 
                         var prev_transform = null;
 
+                        console.log("help me");
+
                         while(!done) {
                             var locality = elements[2].split("*");
 
-                            console.log(locality);
+                            console.log("wtf");
 
                             let locality_state = "";
                             let locality_count = -1;
@@ -164,12 +173,16 @@ interpretRules = function() {
                             let locality_max = 9;
 
                             let r = checkValue(locality[0]);
+
+                            console.log("FFFFF");
+                            console.log(r);
+
                             locality_min = r[0];
                             locality_max = r[1];
 
                             locality_state = locality[1];
 
-                            locality_type = "nearby";
+                            locality_type = elements[3];
 
                             // if (locality.length == 1) {
                             //     locality_state = elements[2];
@@ -283,4 +296,8 @@ checkSyntaxPart = function(part, syntax_list) {
     var t = syntax_list.includes(part.toLowerCase());
     
     return t;
+}
+
+function interpreterLog(s) {
+    console.log("INTERPRETER: " + s);
 }

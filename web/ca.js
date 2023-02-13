@@ -28,6 +28,9 @@ let selected_cell_state = "";
 let selected_cell_element = null;
 
 function draw() {
+    if (CA_grid == null)
+        return;
+        
     for(var y = 0; y < grid_height; y++) {
         for(var x = 0; x < grid_width; x++) {
             ctx.fillStyle = state_cols[CA_grid.getCellState(x,y)];
@@ -110,7 +113,6 @@ evolveDraw = function() {
     draw();
 }
 
-updateRules(true);
 draw();
 
 

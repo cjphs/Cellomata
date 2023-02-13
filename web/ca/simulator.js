@@ -9,8 +9,8 @@ class Transformation {
         // State to look for in the locality check
         this.locality_check_state = locality_check_state;
 
-        this.locality_check_min = locality_check_min;
-        this.locality_check_max = locality_check_max;
+        this.locality_check_min = locality_range_min;
+        this.locality_check_max = locality_range_max;
 
         // How many cells of the locality check state should be in the neighborhood (-1 = any amount but 0)
         this.locality_count = locality_count;

@@ -34,19 +34,7 @@
                 </div>
 
                 <div class="editor">
-                    <textarea id="rule_input_box" style="resize:vertical; height:600px">
-Dead, Alive
-@colors
-black, white
-
-Dead becomes:
-Alive if 3*Alive nearby
-Dead otherwise.
-
-Alive becomes:
-Alive if 2*Alive nearby
-Alive if 3*Alive nearby
-Dead otherwise.</textarea>
+                    <textarea id="rule_input_box" style="resize:vertical; height:600px"></textarea>
                 </div>
 
                 <div style="height:100px">
@@ -73,3 +61,5 @@ Dead otherwise.</textarea>
 </html>
 
 <script src="ca.js"></script>
+
+<script>loadPreset("life")</script>

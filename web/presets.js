@@ -21,13 +21,12 @@ Alive if 3*Alive nearby
 Dead otherwise.
 
 Alive ->
-Alive if [2,3]*Alive
+Alive if [2,3]*Alive nearby
 Dead otherwise.
 
 @width 100
 @height 100
-@wrap true
-`);
+@wrap true`);
 
 preset_rulesets.set("rockpaperscissors",
 `Nil, Rock, Paper, Scissors
@@ -57,8 +56,7 @@ Scissors otherwise.
 
 @width 64
 @height 64
-@wrap false
-`);
+@wrap false`);
 
 function loadPreset(preset_id) {
     document.getElementById("rule_input_box").innerHTML = preset_rulesets.get(preset_id);

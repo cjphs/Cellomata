@@ -38,8 +38,8 @@ button:hover {
 
 .vcontainer {
     min-width:10%;
-    max-width:60%;
-    width:60%;
+    max-width:70%;
+    width:80%;
     display: inline-block;
     vertical-align: middle;
 }
