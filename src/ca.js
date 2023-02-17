@@ -71,7 +71,7 @@ selectCellState = function(state) {
 let CA_rules = null;
 
 updateRules = function(reset=false) {
-    CA_rules = interpretRules();
+    CA_rules = interpretRules(document.getElementById("rule_input_box").value);
 
     var states_box = document.getElementById("state_picker");
     

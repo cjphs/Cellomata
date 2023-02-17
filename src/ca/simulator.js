@@ -76,7 +76,6 @@ class Transformation {
     }
 }
 
-
 class Ruleset {
     constructor(states) {
         this.states = states;
@@ -85,6 +84,9 @@ class Ruleset {
         this.states.forEach(s => {
             this.transformations[s] = [];
         })
+
+        console.log(this.states);
+        console.log(this.transformations);
     }
 
     addRule = function(from_state, transformation) {
@@ -128,6 +130,18 @@ class Grid {
             }
         }
         return grid;
+    }
+
+    gridString = function(delimiter="") {
+        let s = "";
+        for(var y = 0; y < this.height; y++) {
+            for(var x = 0; x < this.width; x++) {
+                s += this.grid[y][x] + (x < this.width ? delimiter : "");
+            }
+            s += "\n"
+        }
+
+        return s;
     }
 
     resetGrid = function(only_override_nonexistant_states=false) {
@@ -228,3 +242,48 @@ class Grid {
         this.grid = next_grid;
     }
 }
+
+if (false) {
+    // Code-based implementation of GoL
+    let states = ["V", "D", "A"]
+    let rules = new Ruleset(states);
+
+    // Random grid initialization 
+    rules.addRule("V", new Transformation("A", "always", "",-1,.5,0,0));
+    rules.addRule("V", new Transformation("D", "always", "",-1,1,0,0));
+
+    // Dead -> Alive if 3*Alive nearby
+    rules.addRule("D", new Transformation("A","nearby", "A",-1,1,3,3));
+
+    // Alive -> Alive if [2,3]*Alive nearby, Dead otherwise.
+    rules.addRule("A", new Transformation("A",  "nearby", "A",-1,1,2,3));
+    rules.addRule("A", new Transformation("D", "always", "",-1,1,0,0));
+
+    let grid = new Grid(10,10,rules);
+
+    // Evolution
+    while(true) {
+        console.log(grid.gridString(delimiter=","));
+        grid.evolve();
+    }
+}
+
+require("./interpreter.js")
+
+let rule_string = 
+`
+V, A, D
+
+V ->
+A with chance .5
+D.
+
+D ->
+A if 3*A nearby
+D.
+
+A ->
+A if [2,3]*A nearby
+D.`
+
+let rules = interpretRules(rule_string)

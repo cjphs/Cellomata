@@ -1,3 +1,5 @@
+require("./simulator.js")
+
 const Modes = {
     READ_STATES: 0,
     SKIP: 1,
@@ -24,9 +26,7 @@ let states = [];
 
 let variables = {};
 
-interpretRules = function() {
-    let inputbox = document.getElementById("rule_input_box");
-
+interpretRules = function(rule_string) {
     let interpreter_state = Modes.READ_STATES;
 
     let ruleset = null;
@@ -40,7 +40,7 @@ interpretRules = function() {
     recalc_grid_size = false;
 
     // Split input into array of strings
-    lines = inputbox.value.split("\n");
+    lines = rule_string.split("\n");
 
     lines.forEach(line => {
         if (line.charAt(0) != "#" && line.trim() != "") {
