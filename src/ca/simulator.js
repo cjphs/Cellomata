@@ -1,4 +1,4 @@
-class Transformation {
+class Clause {
     constructor(transform_state, locality_check_type, locality_check_state="", locality_count=-1, chance=1, locality_range_min=0, locality_range_max=9) {
         // End state of the cell, should this transformation be successful
         this.transform_state = transform_state;
@@ -79,18 +79,18 @@ class Transformation {
 class Ruleset {
     constructor(states) {
         this.states = states;
-        this.transformations = {};
+        this.clauses = {};
 
         this.states.forEach(s => {
-            this.transformations[s] = [];
+            this.clauses[s] = [];
         })
 
         console.log(this.states);
-        console.log(this.transformations);
+        console.log(this.clauses);
     }
 
-    addRule = function(from_state, transformation) {
-        this.transformations[from_state].push(transformation);
+    addRule = function(from_state, clause) {
+        this.clauses[from_state].push(clause);
     }
 
     getDefaultState = function() {
@@ -118,6 +118,13 @@ class Grid {
         this.wrap = true;
 
         this.grid = this.getEmptyGrid();
+
+        this.state_counts = {};
+
+        
+        this.rules.states.forEach(s => {
+            this.state_counts[s] = 0;
+        })
     }
 
     // creates an empty with the default state
@@ -132,16 +139,8 @@ class Grid {
         return grid;
     }
 
-    gridString = function(delimiter="") {
-        let s = "";
-        for(var y = 0; y < this.height; y++) {
-            for(var x = 0; x < this.width; x++) {
-                s += this.grid[y][x] + (x < this.width ? delimiter : "");
-            }
-            s += "\n"
-        }
-
-        return s;
+    getStateCounts = function() {
+        return this.state_counts;
     }
 
     resetGrid = function(only_override_nonexistant_states=false) {
@@ -183,6 +182,11 @@ class Grid {
     evolve = function() {
         var next_grid = this.getEmptyGrid();
 
+        let s_counts_new = {};
+        this.rules.states.forEach(s => {
+            s_counts_new[s] = 0;
+        })
+
         for(var y = 0; y < this.height; y++) {
             for(var x = 0; x < this.width; x++) {
                 var cell_state = this.getCellState(x,y);
@@ -213,13 +217,13 @@ class Grid {
                 neighborhood_dict["*topright"] = this.getCellState(x+1,y-1);
 
                 rule_loop:
-                for(var r = 0; r < this.rules.transformations[cell_state].length; r++) {
-                    var rule = this.rules.transformations[cell_state][r];
+                for(let r = 0; r < this.rules.clauses[cell_state].length; r++) {
+                    let rule = this.rules.clauses[cell_state][r];
 
                     if (!rule.do_evaluation)
                         continue rule_loop;
                     
-                    var truth_value = rule.evaluate(neighborhood_dict);
+                    let truth_value = rule.evaluate(neighborhood_dict);
                     if (truth_value) {
                         conjunction_check: 
                         while(rule.conjucted_with != null) {
@@ -233,57 +237,38 @@ class Grid {
                     }
                     if (truth_value) {
                         next_grid[y][x] = rule.transform_state;
+                        s_counts_new[next_grid[y][x]] += 1;
+
                         break rule_loop;
                     }
                 }
             }
         }
 
+        this.state_counts = s_counts_new;
+
         this.grid = next_grid;
     }
-}
 
-if (false) {
-    // Code-based implementation of GoL
-    let states = ["V", "D", "A"]
-    let rules = new Ruleset(states);
+    /**
+     * Returns a string 
+     * @param {string} row_delimiter The character by which cells should be spaced out
+     * @param {string} column_delimiter The character by which cells should be spaced out
+     * @returns {string} The integer value associated with the variable
+     */
+    asString = function(multiline=false,column_delimiter=",",row_delimiter="\n") {
+        let s = "";
+        for(var y = 0; y < this.height; y++) {
+            for(var x = 0; x < this.width; x++) {
+                s += this.grid[y][x] + (x < this.width - 1 ? column_delimiter : "");
+            }
+            s += row_delimiter
+        }
 
-    // Random grid initialization 
-    rules.addRule("V", new Transformation("A", "always", "",-1,.5,0,0));
-    rules.addRule("V", new Transformation("D", "always", "",-1,1,0,0));
-
-    // Dead -> Alive if 3*Alive nearby
-    rules.addRule("D", new Transformation("A","nearby", "A",-1,1,3,3));
-
-    // Alive -> Alive if [2,3]*Alive nearby, Dead otherwise.
-    rules.addRule("A", new Transformation("A",  "nearby", "A",-1,1,2,3));
-    rules.addRule("A", new Transformation("D", "always", "",-1,1,0,0));
-
-    let grid = new Grid(10,10,rules);
-
-    // Evolution
-    while(true) {
-        console.log(grid.gridString(delimiter=","));
-        grid.evolve();
+        return s;
     }
 }
 
-require("./interpreter.js")
-
-let rule_string = 
-`
-V, A, D
-
-V ->
-A with chance .5
-D.
-
-D ->
-A if 3*A nearby
-D.
-
-A ->
-A if [2,3]*A nearby
-D.`
-
-let rules = interpretRules(rule_string)
+exports.Ruleset = Ruleset;
+exports.Clause = Clause;
+exports.Grid = Grid;

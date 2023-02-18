@@ -1,4 +1,3 @@
-require("./simulator.js")
 
 const Modes = {
     READ_STATES: 0,
@@ -27,6 +26,8 @@ let states = [];
 let variables = {};
 
 interpretRules = function(rule_string) {
+    console.log(rule_string);
+
     let interpreter_state = Modes.READ_STATES;
 
     let ruleset = null;
@@ -43,6 +44,8 @@ interpretRules = function(rule_string) {
     lines = rule_string.split("\n");
 
     lines.forEach(line => {
+        line = line.trim();
+
         if (line.charAt(0) != "#" && line.trim() != "") {
 
             switch(interpreter_state) {
@@ -179,27 +182,27 @@ interpretRules = function(rule_string) {
 
                             locality_type = elements[3];
 
-                            let transform = new Transformation(elements[0], locality_type, locality_state, locality_count, chance, locality_check_min=locality_min, locality_check_max=locality_max);
+                            let clause = new Clause(elements[0], locality_type, locality_state, locality_count, chance, locality_check_min=locality_min, locality_check_max=locality_max);
                            
-                            console.log(locality_min + " " + locality_max);
-                            transform.equality_type = equality;
+                            clause.equality_type = equality;
 
-                            ruleset.addRule(state_being_defined, transform);
+                            ruleset.addRule(state_being_defined, clause);
 
                             if (prev_transform != null) {
-                                prev_transform.conjunctWith(transform);
-                                transform.do_evaluation = false;
+                                prev_transform.conjunctWith(clause);
+                                clause.do_evaluation = false;
                             }
 
                             if (elements.length > 4 && checkSyntaxPart(elements[4], SYNTAX_AND)) {
-                                prev_transform = transform;
+                                prev_transform = clause;
                                 elements.splice(2,3);
                             } else {
                                 done = true;
                             }
                         }
                     } else {
-                        ruleset.addRule(state_being_defined, new Transformation(elements[0], "always", "", -1, chance));
+                        let clause = new Clause(elements[0], "always", "", -1, chance);
+                        ruleset.addRule(state_being_defined, clause);
                     }
 
                     if (termination) {
@@ -288,3 +291,5 @@ checkSyntaxPart = function(part, syntax_list) {
 function interpreterLog(s) {
     console.log("INTERPRETER: " + s);
 }
+
+exports.interpretRules = interpretRules;

@@ -1,8 +1,15 @@
 <link rel="stylesheet" href="style.css">
 
-<script src="src/ca/simulator.js"></script>
-<script src="src/ca/interpreter.js"></script>
+<script>
+    const BROWSER_MODE = true;
+    let exports = {};
+    require = function() {}
+</script>
+
+<script src="src/CA/simulator.js"></script>
+<script src="src/CA/interpreter.js"></script>
 <script src="src/presets.js"></script>
+
 
 <html>
     <body>
@@ -49,6 +56,6 @@
     </body>
 </html>
 
-<script src="src/ca.js"></script>
+<script src="src/main.js"></script>
 
 <script>loadPreset("life")</script>
