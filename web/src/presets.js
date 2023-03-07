@@ -58,6 +58,33 @@ Scissors otherwise.
 @height 100
 @wrap false`);
 
+
+preset_rulesets.set("cave",
+`Void, Air, Wall
+@colors
+black, white, black
+
+p = .5
+
+Void ->
+Air with chance p
+Wall.
+
+q = .9
+
+Air ->
+Wall with prob q if >4*Wall nearby
+Air.
+
+Wall ->
+Wall if >3*Wall nearby
+Air.
+
+@wrap true
+@width 64
+@height 64`
+);
+
 function loadPreset(preset_id) {
     document.getElementById("rule_input_box").innerHTML = preset_rulesets.get(preset_id);
     updateRules(true);
