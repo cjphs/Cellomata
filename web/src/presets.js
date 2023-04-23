@@ -56,7 +56,7 @@ Scissors otherwise.
 
 @width 100
 @height 100
-@wrap false`);
+@wrap true`);
 
 
 preset_rulesets.set("cave",
@@ -80,9 +80,9 @@ Wall ->
 Wall if >3*Wall nearby
 Air.
 
-@wrap true
 @width 64
-@height 64`
+@height 64
+@wrap true`
 );
 
 function loadPreset(preset_id) {
