@@ -1,4 +1,3 @@
-
 const Modes = {
     READ_STATES: 0,
     SKIP: 1,
@@ -17,7 +16,7 @@ const SYNTAX_SIM_HEIGHT     = ["@height", "@h"];
 const SYNTAX_SIM_WRAP       = ["@wrap"];
 const SYNTAX_SIM_COLOURS    = ["@colors", "@colours"];
 
-let state_cols = {}
+let state_cols = {};
 let reset_grid = false;
 let recalc_grid_size = false;
 
@@ -40,7 +39,6 @@ interpretRules = function(rule_string) {
 
     recalc_grid_size = false;
 
-    // Split input into array of strings
     lines = rule_string.split("\n");
 
     lines.forEach(line => {
@@ -149,7 +147,9 @@ interpretRules = function(rule_string) {
                     var chance = 1;
                     if (elements.length > 1 && checkSyntaxPart(elements[1], SYNTAX_WITH)) {
                         if (checkSyntaxPart(elements[2], SYNTAX_CHANCE)) {
+
                             interpreterLog("CHANCE");
+
                             if (elements[3] in variables)
                                 elements[3] = variables[elements[3]];
                             chance = parseFloat(elements[3]);
@@ -159,8 +159,8 @@ interpretRules = function(rule_string) {
 
                     if (elements.length > 1 && elements[1] == "if") {
                         interpreterLog("IF");
-                        var done = false;
 
+                        var done = false;
                         var prev_transform = null;
 
                         while(!done) {
@@ -170,20 +170,32 @@ interpretRules = function(rule_string) {
                             let locality_count = -1;
                             let equality = "=";
 
-                            let locality_min = 0;
+                            let locality_min = 1;
                             let locality_max = 9;
+                            
+                            if (locality.length > 1) {
+                                let r = checkValue(locality[0]);
+                                
+                                locality_min = r[0];
+                                locality_max = r[1];
 
-                            let r = checkValue(locality[0]);
-
-                            locality_min = r[0];
-                            locality_max = r[1];
-
-                            locality_state = locality[1];
+                                locality_state = locality[1];
+                            } else {
+                                locality_state = locality[0];
+                            }
 
                             locality_type = elements[3];
 
-                            let clause = new Clause(elements[0], locality_type, locality_state, locality_count, chance, locality_check_min=locality_min, locality_check_max=locality_max);
-                           
+                            let clause = new Clause(
+                                elements[0],
+                                locality_type,
+                                locality_state,
+                                locality_count,
+                                chance,
+                                locality_check_min=locality_min,
+                                locality_check_max=locality_max
+                            );
+
                             clause.equality_type = equality;
 
                             ruleset.addRule(state_being_defined, clause);
@@ -217,11 +229,6 @@ interpretRules = function(rule_string) {
     return ruleset;
 }
 
-/**
- * This function receives a string value and checks if it represents some kind of value (number? range? variable?)
- * @param {string} val The value to be checked (does this represent a variable/number/range?)
- * @returns {[number,number]} range of minimum value & maximum value
- */
 function checkValue(val) {
     let min_value, max_value;
     
@@ -233,7 +240,6 @@ function checkValue(val) {
         min_value = checkVariable(val[0]);
         max_value = checkVariable(val[1]);
 
-    // Inequalities
     } else if (val[0] == ">" || val[0] == "<") {
         let eq = (val[1] == "=")
         let inequality_type = val[0];
@@ -265,11 +271,6 @@ function checkValue(val) {
     return [min_value, max_value];
 }
 
-/**
- * Check if a symbol exists as a variable known to the interpreter.
- * @param {string} value Potential variable name
- * @returns {number} The integer value associated with the variable
- */
 function checkVariable(value) {
     if (value in variables)
         return parseInt(variables[value]);
@@ -277,12 +278,6 @@ function checkVariable(value) {
         return parseInt(value);
 }
 
-/**
- * Check if a particular token belongs to a list of syntax tokens (e.g., "->" and "becomes:" are both valid for rule declarations).
- * @param {string} part Syntax token
- * @param {Array} syntax_list The constant syntax list of which to check membership
- * @returns {boolean} True if 'part' is in 'syntax_list'. 
- */
 checkSyntaxPart = function(part, syntax_list) {
     var t = syntax_list.includes(part.toLowerCase());
     return t;
