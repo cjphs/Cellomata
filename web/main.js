@@ -8,7 +8,7 @@ let cell_width = canvas.clientWidth/grid_width;
 let cell_height = canvas.clientHeight/grid_height;
 
 function recalculateGridSize() {
-    playing = false;
+    pause();
 
     cell_width = canvas.clientWidth/grid_width;
     cell_height = canvas.clientHeight/grid_height;
@@ -39,6 +39,23 @@ function draw() {
             // ctx.strokeRect(cell_width*x, cell_height*y, cell_width, cell_height);
         }
     }
+}
+
+pauseUnpause() = function() {
+    if (playing)
+        pause();
+    else
+        unpause();
+}
+
+pause() = function() {
+    playing = false;
+    document.getElementById("play-button").innerHTML = "Play";
+}
+
+unpause() = function() {
+    playing = true;
+    document.getElementById("play-button").innerHTML = "Pause";
 }
 
 play = function() {
