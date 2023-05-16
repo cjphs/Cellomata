@@ -13,8 +13,6 @@ html, body {
     display: inline-block;
     vertical-align: middle;
     text-align: center; 
-
-
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
@@ -38,8 +36,8 @@ button:hover {
 
 .vcontainer {
     min-width:10%;
-    max-width:70%;
-    width:80%;
+    max-width:auto;
+    width:60%;
     display: inline-block;
     vertical-align: middle;
 }
