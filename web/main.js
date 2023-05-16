@@ -118,6 +118,13 @@ updateRules = function(reset=false) {
     cssAnim("grid_canvas", "rules_save 1s")
 }
 
+clearGrid = function() {
+    CA_grid.resetGrid();
+    selectCellState(CA_grid.rules.getDefaultState());
+    cssAnim("grid_canvas", "grid_clear 1s");
+    draw();
+}
+
 resetGrid = function(CA_rules,existent_states=true) {
     CA_grid.resetGrid(only_override_nonexistant_states=existent_states);
     selectCellState(CA_rules.getDefaultState());
@@ -154,9 +161,7 @@ document.onkeydown = function (e) {
         break;
 
         case 88:
-        CA_grid.resetGrid();
-        draw();
-        cssAnim("grid_canvas", "grid_clear 1s");
+        clearGrid();
         break;
     }
 }; 

@@ -23,7 +23,8 @@
                 </div>
 
                 <div class="controls">
-                    <button style="width:100px; height:50%; margin-top:10px" onclick="evolveDraw()">Step</button> | 
+                    <button id="clear-grid" style="width:100px; height:50%; margin-top:10px" onclick="clearGrid()">Clear</button>
+                    <button style="width:100px; height:50%; margin-top:10px" onclick="evolveDraw()">Step</button> 
                     <button id="play-button" style="width:100px; height:50%; margin-top:10px" onclick="pauseUnpause(); play()">Play</button>
                 </div>
 
@@ -45,12 +46,16 @@
                 </div>
 
                 <div style="height:100px">
-                    <button style="width:100%; height:50%; margin-top:10px" onclick="updateRules()">Interpret</button>
+                    <button style="width:100%; height:50%; margin-top:10px" onclick="updateRules()">Interpret (CTRL+S)</button>
                 </div>
             </div>
 
             <div style="color:white; font-family:Arial">
                 Created by <a href="https://cjphs.github.io/" target="_blank">cjphs</a>
+            </div>
+
+            <div style="color:white; font-family:Arial">
+                Keyboard shortcuts: CTRL + S (reinterpret rules), CTRL + X (clear grid)
             </div>
         </div>
     </body>
