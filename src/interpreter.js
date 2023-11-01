@@ -267,7 +267,7 @@ function checkValue (val) {
   return [minValue, maxValue]
 }
 
-function checkVariable (value) {
+const checkVariable = function (value) {
   if (value in variables) {
     return parseInt(variables[value])
   } else {
@@ -275,11 +275,11 @@ function checkVariable (value) {
   }
 }
 
-checkSyntaxPart = function (part, syntaxList) {
+const checkSyntaxPart = function (part, syntaxList) {
   return syntaxList.includes(part.toLowerCase())
 }
 
-function interpreterLog (s) {
+const interpreterLog = function (s) {
   console.log('INTERPRETER: ' + s)
 }
 
