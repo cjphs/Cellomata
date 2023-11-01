@@ -1,6 +1,6 @@
-import { Grid } from './src/simulator.js'
-import { interpretRules } from './src/interpreter.js'
-import { presetRulesets } from './src/presets.js'
+import { Grid } from './simulator.js'
+import { interpretRules } from './interpreter.js'
+import { presetRulesets } from './presets.js'
 
 const canvas = document.getElementById('grid-canvas')
 const ctx = canvas.getContext('2d')

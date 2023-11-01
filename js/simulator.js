@@ -269,5 +269,3 @@ class Grid {
     return s
   }
 }
-
-export { Clause, Ruleset, Grid }

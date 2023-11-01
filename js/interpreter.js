@@ -284,5 +284,3 @@ const checkSyntaxPart = function (part, syntaxList) {
 const interpreterLog = function (s) {
   console.log('INTERPRETER: ' + s)
 }
-
-export { interpretRules }
