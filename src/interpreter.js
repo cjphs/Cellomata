@@ -1,3 +1,5 @@
+import { Ruleset } from './simulator.js'
+
 const Modes = {
   READ_STATES: 0,
   SKIP: 1,
