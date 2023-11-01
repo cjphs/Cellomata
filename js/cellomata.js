@@ -88,9 +88,7 @@ class Clause {
     chance = 1,
     localityRangeMin = 0,
     localityRangeMax = 9
-  )
-
-  {
+  ) {
     // End state of the cell, should this transformation be successful
     this.transformState = transformState
 
@@ -131,11 +129,9 @@ class Clause {
         return true
 
       case 'nearby':
-        let n = neighborhoodDict[this.localityCheckState];
+        return (this.localityRangeMin <= neighborhoodDict[this.localityCheckState]) && (neighborhoodDict[this.localityCheckState] <= this.localityRangeMax)
 
-        return (this.localityRangeMin <= n) && (n <= this.localityRangeMax)
-
-      case 'majority':
+      case 'majority': {
         let mostNeighborsCount = 0
         let mostNeighborsState = ''
 
@@ -147,14 +143,16 @@ class Clause {
         })
 
         return (mostNeighborsState === this.localityCheckState)
+      }
 
       // directional
-      default:
+      default: {
         if (this.localityCount !== 0) {
           return (neighborhoodDict['*' + this.localityCheckType] === this.localityCheckState)
         } else {
           return (neighborhoodDict['*' + this.localityCheckType] !== this.localityCheckState)
         }
+      }
     }
   }
 }
@@ -224,9 +222,9 @@ class Grid {
     return this.stateCounts
   }
 
-  resetGrid = function (only_override_nonexistant_states = false) {
-    if (!only_override_nonexistant_states) {
-      this.grid = this.getEmptyGrid();
+  resetGrid = function (onlyOverrideNonexistentStates = false) {
+    if (!onlyOverrideNonexistentStates) {
+      this.grid = this.getEmptyGrid()
     } else {
       for (let y = 0; y < this.height; y++) {
         for (let x = 0; x < this.width; x++) {
@@ -239,7 +237,7 @@ class Grid {
   }
 
   // Check if (x,y) are valid coordinates in the grid
-  coordinatesInBounds = function(x,y) {
+  coordinatesInBounds = function (x, y) {
     return (x >= 0 & x < this.width & y >= 0 & y < this.height)
   }
 
@@ -262,77 +260,73 @@ class Grid {
     }
   }
 
-    // Evolve the grid by one step
-    evolve = function() {
-        var next_grid = this.getEmptyGrid();
+  // Evolve the grid by one step
+  evolve = function () {
+    const nextGrid = this.getEmptyGrid()
 
-        let s_counts_new = {};
-        this.rules.states.forEach(s => {
-            s_counts_new[s] = 0;
-        })
+    const sCountsNew = {}
+    this.rules.states.forEach(s => {
+      sCountsNew[s] = 0
+    })
 
-        for(var y = 0; y < this.height; y++) {
-            for(var x = 0; x < this.width; x++) {
-                var cell_state = this.getCellState(x,y);
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const cellState = this.getCellState(x, y)
 
-                next_grid[y][x] = cell_state;
+        nextGrid[y][x] = cellState
 
-                var neighborhoodDict = this.rules.getStatesDict();
+        const neighborhoodDict = this.rules.getStatesDict()
 
-                for(var i = x-1; i < x+2; i++) {
-                    for(var j = y-1; j < y+2; j++) {
-                        if ((i == x && j == y))
-                            continue;
-                        // if (this.coordinatesInBounds(i,j))
-                        var state = this.getCellState(i,j);
-
-                        if (state != "")
-                            neighborhoodDict[state] += 1;
-                    }
-                }
-
-                neighborhoodDict["*below"] = this.getCellState(x,y+1);
-                neighborhoodDict["*above"] = this.getCellState(x,y-1);
-                neighborhoodDict["*left"] = this.getCellState(x-1,y);
-                neighborhoodDict["*right"] = this.getCellState(x+1,y);
-                neighborhoodDict["*bottomleft"] = this.getCellState(x-1,y+1);
-                neighborhoodDict["*bottomright"] = this.getCellState(x+1,y+1);
-                neighborhoodDict["*topleft"] = this.getCellState(x-1,y-1);
-                neighborhoodDict["*topright"] = this.getCellState(x+1,y-1);
-
-                rule_loop:
-                for(let r = 0; r < this.rules.clauses[cell_state].length; r++) {
-                    let rule = this.rules.clauses[cell_state][r];
-
-                    if (!rule.do_evaluation)
-                        continue rule_loop;
-                    
-                    let truth_value = rule.evaluate(neighborhoodDict);
-                    if (truth_value) {
-                        conjunction_check: 
-                        while(rule.conjucted_with != null) {
-                            rule = rule.conjucted_with;
-                            truth_value = rule.evaluate(neighborhoodDict);
-
-                            if (!truth_value) {
-                                break conjunction_check;
-                            }
-                        }
-                    }
-                    if (truth_value) {
-                        next_grid[y][x] = rule.transformState;
-                        s_counts_new[next_grid[y][x]] += 1;
-
-                        break rule_loop;
-                    }
-                }
+        for (let i = x - 1; i < x + 2; i++) {
+          for (let j = y - 1; j < y + 2; j++) {
+            if ((i === x && j === y)) { continue }
+            // if (this.coordinatesInBounds(i,j))
+            const state = this.getCellState(i, j)
+            if (state !== '') {
+              neighborhoodDict[state] += 1
             }
+          }
         }
 
-        this.stateCounts = s_counts_new;
+        neighborhoodDict['*below'] = this.getCellState(x, y + 1)
+        neighborhoodDict['*above'] = this.getCellState(x, y - 1)
+        neighborhoodDict['*left'] = this.getCellState(x - 1, y)
+        neighborhoodDict['*right'] = this.getCellState(x + 1, y)
+        neighborhoodDict['*bottomleft'] = this.getCellState(x - 1, y + 1)
+        neighborhoodDict['*bottomright'] = this.getCellState(x + 1, y + 1)
+        neighborhoodDict['*topleft'] = this.getCellState(x - 1, y - 1)
+        neighborhoodDict['*topright'] = this.getCellState(x + 1, y - 1)
 
-        this.grid = next_grid;
+        for (let r = 0; r < this.rules.clauses[cellState].length; r++) {
+          let rule = this.rules.clauses[cellState][r]
+
+          if (!rule.do_evaluation) { continue }
+
+          let truthValue = rule.evaluate(neighborhoodDict)
+          if (truthValue) {
+            while (rule.conjucted_with != null) {
+              rule = rule.conjucted_with
+              truthValue = rule.evaluate(neighborhoodDict)
+
+              if (!truthValue) {
+                break
+              }
+            }
+          }
+          if (truthValue) {
+            nextGrid[y][x] = rule.transformState
+            sCountsNew[nextGrid[y][x]] += 1
+
+            break
+          }
+        }
+      }
     }
+
+    this.stateCounts = sCountsNew
+
+    this.grid = nextGrid
+  }
 
   /**
    * Returns a string
@@ -371,9 +365,9 @@ const SYNTAX_SIM_HEIGHT = ['@height', '@h']
 const SYNTAX_SIM_WRAP = ['@wrap']
 const SYNTAX_SIM_COLOURS = ['@colors', '@colours']
 
-let state_cols = {}
+let stateColors = {}
 let reset_grid = false
-let recalc_grid_size = false
+let recalcGridSize = false
 
 let states = []
 
@@ -390,9 +384,9 @@ const interpretRules = function (ruleString) {
 
   variables = {}
 
-  state_cols = {}
+  stateColors = {}
 
-  recalc_grid_size = false
+  recalcGridSize = false
 
   const lines = ruleString.split('\n')
 
@@ -401,7 +395,7 @@ const interpretRules = function (ruleString) {
 
     if (line.charAt(0) !== '#' && line.trim() !== '') {
       switch (interpreterState) {
-        case Modes.READ_STATES:
+        case Modes.READ_STATES: {
           const newStates = line.replaceAll(' ', '').split(',')
 
           let stateCount = 0
@@ -416,78 +410,80 @@ const interpretRules = function (ruleString) {
 
           interpreterState = Modes.SKIP
           break
+        }
 
-        case Modes.COLORS:
+        case Modes.COLORS: {
           const cols = line.replaceAll(' ','').split(',')
           let i = 0
           states.forEach(s => {
-            state_cols[s] = cols[i++]
+            stateColors[s] = cols[i++]
           })
           interpreterState = Modes.SKIP
           break
+        }
 
-        case Modes.SKIP:
+        case Modes.SKIP: {
           elements = line.split(' ')
 
-                if (checkSyntaxPart(elements[0], SYNTAX_SIM_WIDTH)) {
-                    var w
+          if (checkSyntaxPart(elements[0], SYNTAX_SIM_WIDTH)) {
+            let w
 
-                    if (elements[1] in variables)
-                        w = parseInt(variables[elements[1]])
-                    else
-                        w = parseInt(elements[1])
+            if (elements[1] in variables)
+              w = parseInt(variables[elements[1]])
+            else
+              w = parseInt(elements[1])
 
-                    if (w != grid_width) {
-                        grid_width = w
-                        reset_grid = true
-                        recalc_grid_size = true
-                    }
-                }else if (checkSyntaxPart(elements[0], SYNTAX_SIM_HEIGHT)) {
-                    var h
+            if (w != gridWidth) {
+              gridWidth = w
+              reset_grid = true
+              recalcGridSize = true
+            }
+          }else if (checkSyntaxPart(elements[0], SYNTAX_SIM_HEIGHT)) {
+            let h
 
-                    if (elements[1] in variables)
-                        h = parseInt(variables[elements[1]])
-                    else
-                        h = parseInt(elements[1])
+            if (elements[1] in variables)
+              h = parseInt(variables[elements[1]])
+            else
+              h = parseInt(elements[1])
 
-                    if (h != grid_height) {
-                        grid_height = h
-                        reset_grid = true
-                        recalc_grid_size = true
-                    }
-                }
+            if (h != gridHeight) {
+              gridHeight = h
+              reset_grid = true
+              recalcGridSize = true
+            }
+          }
 
-                else if (checkSyntaxPart(elements[0], SYNTAX_SIM_WRAP)) {
-                    var wrap = (elements[1] === 'true')
+          else if (checkSyntaxPart(elements[0], SYNTAX_SIM_WRAP)) {
+            const wrap = (elements[1] === 'true')
 
-                    if (CA_grid != null) {
-                        CA_grid.wrap = wrap
-                    }
-                }
+            if (grid != null) {
+              grid.wrap = wrap
+            }
+          }
 
-                if (checkSyntaxPart(elements[0], SYNTAX_SIM_COLOURS))
-                    interpreterState = Modes.COLORS
+          if (checkSyntaxPart(elements[0], SYNTAX_SIM_COLOURS))
+            interpreterState = Modes.COLORS
 
-                else if (elements.length > 1 && checkSyntaxPart(elements[1], SYNTAX_BECOMES)) {
-                    stateBeingDefined = elements[0]
-                    interpreterState = Modes.DEFINE_CONDITIONALS
-                
-                // new variable
-                } else if (elements.length > 1 & elements[1] == '=') {
-                    variables[elements[0]] = elements[2]
-                    console.log(variables)
-                }
+          else if (elements.length > 1 && checkSyntaxPart(elements[1], SYNTAX_BECOMES)) {
+            stateBeingDefined = elements[0]
+            interpreterState = Modes.DEFINE_CONDITIONALS
+          } else if (elements.length > 1 & elements[1] == '=') {
+            // new variable
+            variables[elements[0]] = elements[2]
+            console.log(variables)
+          }
 
-                break
+          break
+        }
 
-            case Modes.DEFINE_CONDITIONALS:
+        case Modes.DEFINE_CONDITIONALS: 
                 interpreterLog('DEFINE_CONDITIONALS')
 
                 elements = line.split(' ')
 
                 console.log(elements[elements.length-1].slice(-1))
 
-                var termination = false
+                let termination = false
                 
                 if (elements[elements.length-1].slice(-1) == '.') {
                     interpreterLog('TERMINATION ' + elements[0])
@@ -497,7 +493,7 @@ const interpretRules = function (ruleString) {
                     termination = true
                 }
 
-                var chance = 1
+                let chance = 1
                 if (elements.length > 1 && checkSyntaxPart(elements[1], SYNTAX_WITH)) {
                     if (checkSyntaxPart(elements[2], SYNTAX_CHANCE)) {
 
@@ -513,11 +509,11 @@ const interpretRules = function (ruleString) {
                 if (elements.length > 1 && elements[1] == 'if') {
                     interpreterLog('IF')
 
-                    var done = false
-                    var prev_transform = null
+                    let done = false
+                    let prev_transform = null
 
                     while(!done) {
-                        var locality = elements[2].split('*')
+                        let locality = elements[2].split('*')
 
                         let locality_state = ''
                         let locality_count = -1
@@ -572,10 +568,10 @@ const interpretRules = function (ruleString) {
 
                 if (termination) {
                     interpreterState = Modes.SKIP
-                }
+          }
 
-                break
-        }
+        break
+      }
     }
   })
 
@@ -586,7 +582,7 @@ function checkValue (val) {
   let minValue, maxValue
 
   // Range
-  if (val[0] === '[' && val[val.length-1] === ']') {
+  if (val[0] === '[' && val[val.length - 1] === ']') {
     val = val.substring(1, val.length - 1)
     val = val.split(',')
 
@@ -640,12 +636,11 @@ const interpreterLog = function (s) {
 
 // MAIN
 
-
 const canvas = document.getElementById('grid-canvas')
 const ctx = canvas.getContext('2d')
 
-const gridWidth = 64
-const gridHeight = 64
+let gridWidth = 64
+let gridHeight = 64
 
 let cellWidth = canvas.clientWidth / gridWidth
 let cellHeight = canvas.clientHeight / gridHeight
@@ -675,7 +670,7 @@ const draw = function () {
 
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
-      ctx.fillStyle = stateCols[grid.getCellState(x, y)]
+      ctx.fillStyle = stateColors[grid.getCellState(x, y)]
       ctx.fillRect(
         Math.floor(cellWidth * x),
         Math.floor(cellHeight * y),
@@ -734,21 +729,20 @@ const selectCellState = function (state) {
 let rules = null
 
 const updateRules = function (reset = false) {
-  rules = interpretRules (document.getElementById('rule_input_box').value)
+  rules = interpretRules(document.getElementById('rule_input_box').value)
 
   const statesBox = document.getElementById('state_picker')
 
   statesBox.innerHTML = ''
 
   rules.states.forEach(s => {
-    statesBox.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + stateCols[s] + "' onclick='selectCellState(\"" + s + "\")'></div> ")
-  });
+    statesBox.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + stateColors[s] + "' onclick='selectCellState(\"" + s + "\")'></div> ")
+  })
 
   if (grid == null) {
     grid = new Grid(gridWidth, gridHeight, rules)
-  }
-  else {
-    grid.rules = rules;
+  } else {
+    grid.rules = rules
   }
 
   if (reset) {
@@ -756,21 +750,21 @@ const updateRules = function (reset = false) {
 
     resetGrid(rules)
   } else {
-    selectCellState(selectedCellState);
+    selectCellState(selectedCellState)
   }
 
-  cssAnim('grid_canvas', 'rules_save 1s')
+  cssAnim('grid-canvas', 'rules_save 1s')
 }
 
 const clearGrid = function () {
   grid.resetGrid()
   selectCellState(grid.rules.getDefaultState())
-  cssAnim('grid_canvas', 'grid_clear 1s')
+  cssAnim('grid-canvas', 'grid_clear 1s')
   draw()
 }
 
 const resetGrid = function (rules, existingStates = true) {
-  grid.resetGrid(only_override_nonexistant_states = existingStates)
+  grid.resetGrid(existingStates)
   selectCellState(rules.getDefaultState())
   draw()
 }
