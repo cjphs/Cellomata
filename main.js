@@ -1,185 +1,184 @@
-const canvas = document.getElementById("grid_canvas");
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('grid_canvas')
+const ctx = canvas.getContext('2d')
 
-let grid_width = 64;
-let grid_height = 64;
+const gridWidth = 64
+const gridHeight = 64
 
-let cell_width = canvas.clientWidth/grid_width;
-let cell_height = canvas.clientHeight/grid_height;
+let cellWidth = canvas.clientWidth / gridWidth
+let cellHeight = canvas.clientHeight / gridHeight
 
-function recalculateGridSize() {
-    pause();
+function recalculateGridSize () {
+  pause()
 
-    cell_width = canvas.clientWidth/grid_width;
-    cell_height = canvas.clientHeight/grid_height;
+  cellWidth = canvas.clientWidth / gridWidth
+  cellHeight = canvas.clientHeight / gridHeight
 
-    CA_grid.width = grid_width;
-    CA_grid.height = grid_height;
+  CA_grid.width = gridWidth
+  CA_grid.height = gridHeight
 
-    resetGrid(CA_rules,false);
+  resetGrid(CA_rules, false)
 }
 
-let CA_grid = null;
-let playing = false;
+let CA_grid = null
+let playing = false
 
-let frame = 0;
+let frame = 0
 
-let selected_cell_state = "";
-let selected_cell_element = null;
+let selectedCellState = ''
+let selectedCellElement = null
 
-const draw = function() {
-    if (CA_grid == null)
-        return;
-        
-    for(var y = 0; y < grid_height; y++) {
-        for(var x = 0; x < grid_width; x++) {
-            ctx.fillStyle = state_cols[CA_grid.getCellState(x,y)];
-            ctx.fillRect(
-                Math.floor(cell_width*x),
-                Math.floor(cell_height*y),
-                Math.ceil(cell_width),
-                Math.ceil(cell_height)
-            );
-        }
+const draw = function () {
+  if (CA_grid == null) { return }
+
+  for (let y = 0; y < gridHeight; y++) {
+    for (let x = 0; x < gridWidth; x++) {
+      ctx.fillStyle = stateCols[CA_grid.getCellState(x,y)];
+      ctx.fillRect(
+        Math.floor(cellWidth * x),
+        Math.floor(cellHeight * y),
+        Math.ceil(cellWidth),
+        Math.ceil(cellHeight)
+      )
     }
+  }
 }
 
-const pauseUnpause = function() {
-    if (playing)
-        pause();
-    else
-        unpause();
+const pauseUnpause = function () {
+  if (playing) {
+    pause()
+  } else {
+    unpause()
+  }
 }
 
-const pause = function() {
-    playing = false;
-    document.getElementById("play-button").innerHTML = "Play";
+const pause = function () {
+  playing = false
+  document.getElementById('play-button').innerHTML = 'Play'
 }
 
-const unpause = function() {
-    playing = true;
-    document.getElementById("play-button").innerHTML = "Pause";
+const unpause = function () {
+  playing = true
+  document.getElementById('play-button').innerHTML = 'Pause'
 }
 
-const play = function() {
-    if (!playing)
-        return;
-    
-    if (frame++ % 10 == 0) {
-        evolveDraw();
-    }
+const play = function () {
+  if (!playing) { return }
 
-    requestAnimationFrame(play);
+  if (frame++ % 10 === 0) {
+    evolveDraw()
+  }
+
+  requestAnimationFrame(play)
 }
 
-const cssAnim = function(element, animation) {
-    var canv = document.getElementById(element)
-    canv.style.animation = 'none';
-    canv.offsetWidth;
-    canv.style.animation = animation; 
+const cssAnim = function (element, animation) {
+  const canv = document.getElementById(element)
+  canv.style.animation = 'none'
+  canv.offsetWidth
+  canv.style.animation = animation
 }
 
-const selectCellState = function(state) {
-    if (selected_cell_element != null)
-        selected_cell_element.style.boxShadow = "none";
+const selectCellState = function (state) {
+  if (selectedCellElement != null) {
+    selectedCellElement.style.boxShadow = 'none'
+  }
 
-    selected_cell_element = document.getElementById(state);
-    selected_cell_element.style.boxShadow = "white 0 0 10px";
-    selected_cell_state = state;
+  selectedCellElement = document.getElementById(state)
+  selectedCellElement.style.boxShadow = 'white 0 0 10px'
+  selectedCellState = state
 }
 
-let CA_rules = null;
+let CA_rules = null
 
-const updateRules = function(reset=false) {
-    CA_rules = interpretRules(document.getElementById("rule_input_box").value);
+const updateRules = function (reset = false) {
+  CA_rules = interpretRules(document.getElementById('rule_input_box').value)
 
-    var states_box = document.getElementById("state_picker");
-    
-    states_box.innerHTML = "";
-                    
-    CA_rules.states.forEach(s => {
-        states_box.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + state_cols[s] + "' onclick='selectCellState(\"" + s + "\")'></div> ");
-    });
+  const statesBox = document.getElementById('state_picker')
 
-    if (CA_grid == null)
-        CA_grid = new Grid(grid_width, grid_height, CA_rules);
-    else
-        CA_grid.rules = CA_rules;
+  statesBox.innerHTML = ''
 
-    if (reset) {
-        if (recalc_grid_size)
-            recalculateGridSize();
+  CA_rules.states.forEach(s => {
+    statesBox.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + stateCols[s] + "' onclick='selectCellState(\"" + s + "\")'></div> ")
+  });
 
-        resetGrid(CA_rules);
-    } else {
-        selectCellState(selected_cell_state);
-    }
+  if (CA_grid == null) {
+    CA_grid = new Grid(gridWidth, gridHeight, CA_rules)
+  }
+  else {
+    CA_grid.rules = CA_rules;
+  }
 
-    cssAnim("grid_canvas", "rules_save 1s")
+  if (reset) {
+    if (recalcGridSize) { recalculateGridSize() }
+
+    resetGrid(CA_rules)
+  } else {
+    selectCellState(selectedCellState);
+  }
+
+  cssAnim('grid_canvas', 'rules_save 1s')
 }
 
-const clearGrid = function() {
-    CA_grid.resetGrid();
-    selectCellState(CA_grid.rules.getDefaultState());
-    cssAnim("grid_canvas", "grid_clear 1s");
-    draw();
+const clearGrid = function () {
+  CA_grid.resetGrid()
+  selectCellState(CA_grid.rules.getDefaultState())
+  cssAnim('grid_canvas', 'grid_clear 1s')
+  draw()
 }
 
-const resetGrid = function(CA_rules,existent_states=true) {
-    CA_grid.resetGrid(only_override_nonexistant_states=existent_states);
-    selectCellState(CA_rules.getDefaultState());
-    draw();
+const resetGrid = function (CA_rules, existingStates = true) {
+  CA_grid.resetGrid(only_override_nonexistant_states = existingStates)
+  selectCellState(CA_rules.getDefaultState())
+  draw()
 }
 
-const evolveDraw = function() {
-    CA_grid.evolve();
-    draw();
+const evolveDraw = function () {
+  CA_grid.evolve()
+  draw()
 }
 
-draw();
+draw()
 
-
-/////////////////
-// Event stuff //
-/////////////////
+/*
+Event stuff
+*/
 
 document.onkeydown = function (e) {
-    e = e || window; //Get event
-   
-    if (!e.ctrlKey) return;
-    
-    switch (e.key) {
-        case "s":
-        updateRules();
-        draw();
-        
-        e.preventDefault();
-        e.stopPropagation();
-        break;
+  e = e || window
 
-        case "x":
-        clearGrid();
-        break;
-    }
-}; 
+  if (!e.ctrlKey) { return }
 
-let mouse_down = false;
-canvas.addEventListener('mousedown', function() {mouse_down = true}, false);
-canvas.addEventListener('mouseup', function() {mouse_down = false}, false);
+  switch (e.key) {
+    case 's':
+      updateRules()
+      draw()
+
+      e.preventDefault()
+      e.stopPropagation()
+      break
+
+    case 'x':
+      clearGrid()
+      break
+  }
+}
+
+let mouseDown = false
+canvas.addEventListener('mousedown', function () { mouseDown = true }, false)
+canvas.addEventListener('mouseup', function () { mouseDown = false }, false)
 
 canvas.addEventListener('mousemove', e => {
-    if (mouse_down) {
-        // https://stackoverflow.com/a/42111623
-        let rect = e.target.getBoundingClientRect();
-        let x = e.clientX - rect.left; //x position within the element.
-        let y = e.clientY - rect.top;  //y position within the element.
+  if (mouseDown) {
+    // https://stackoverflow.com/a/42111623
+    const rect = e.target.getBoundingClientRect()
+    const x = e.clientX - rect.left // x position within the element.
+    const y = e.clientY - rect.top // y position within the element.
 
-        let cx = Math.floor(x/cell_width);
-        let cy = Math.floor(y/cell_height);
+    const cx = Math.floor(x / cellWidth)
+    const cy = Math.floor(y / cellHeight)
 
-        CA_grid.setCellState(cx, cy, selected_cell_state);
+    CA_grid.setCellState(cx, cy, selectedCellState)
 
-        draw();
-    }
-}, false);
-
+    draw()
+  }
+}, false)

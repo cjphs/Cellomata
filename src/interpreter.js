@@ -6,23 +6,23 @@ const Modes = {
     COLORS: 100
 }
 
-const SYNTAX_WITH           = ["with", "w/", "w"];
-const SYNTAX_CHANCE         = ["chance", "probability", "prob", "%"];
-const SYNTAX_BECOMES        = ["becomes:", "->", ":"];
-const SYNTAX_AND            = ["and", "&"]
+const SYNTAX_WITH = ["with", "w/", "w"]
+const SYNTAX_CHANCE = ["chance", "probability", "prob", "%"]
+const SYNTAX_BECOMES = ["becomes:", "->", ":"]
+const SYNTAX_AND = ["and", "&"]
 
-const SYNTAX_SIM_WIDTH      = ["@width", "@w"];
-const SYNTAX_SIM_HEIGHT     = ["@height", "@h"];
-const SYNTAX_SIM_WRAP       = ["@wrap"];
-const SYNTAX_SIM_COLOURS    = ["@colors", "@colours"];
+const SYNTAX_SIM_WIDTH = ["@width", "@w"]
+const SYNTAX_SIM_HEIGHT = ['@height', '@h']
+const SYNTAX_SIM_WRAP = ["@wrap"]
+const SYNTAX_SIM_COLOURS = ["@colors", "@colours"]
 
 let state_cols = {};
 let reset_grid = false;
 let recalc_grid_size = false;
 
-let states = [];
+let states = []
 
-let variables = {};
+let variables = {}
 
 interpretRules = function(rule_string) {
     console.log(rule_string);
