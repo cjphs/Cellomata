@@ -1,5 +1,5 @@
 import { Grid } from './src/simulator.js'
-import { loadPreset } from './src/presets.js'
+import { presetRulesets } from './src/presets.js'
 
 const canvas = document.getElementById('grid_canvas')
 const ctx = canvas.getContext('2d')
@@ -185,5 +185,11 @@ canvas.addEventListener('mousemove', e => {
     draw()
   }
 }, false)
+
+const loadPreset = function () {
+  const selectedPreset = document.getElementById('template_selection_box').value
+  document.getElementById('rule_input_box').innerHTML = presetRulesets.get(selectedPreset)
+  updateRules(true)
+}
 
 loadPreset('life')

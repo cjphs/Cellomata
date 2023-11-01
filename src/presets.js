@@ -1,11 +1,5 @@
 const presetRulesets = new Map()
 
-const loadPreset = function () {
-  const selectedPreset = document.getElementById('template_selection_box').value
-  document.getElementById('rule_input_box').innerHTML = presetRulesets.get(selectedPreset)
-  updateRules(true)
-}
-
 presetRulesets.set('life',
 `Void, Dead, Alive
 @colors
