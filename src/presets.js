@@ -79,4 +79,4 @@ Air.
 @wrap true`
 )
 
-export { presetRulesets, loadPreset }
+export { presetRulesets }
