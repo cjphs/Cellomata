@@ -227,62 +227,60 @@ const interpretRules = function (ruleString) {
   return ruleset
 }
 
-function checkValue(val) {
-    let min_value, max_value
-    
-    // Range
-    if (val[0] == '[' && val[val.length-1] === ']') {
-        val = val.substring(1, val.length - 1)
-        val = val.split(',')
+function checkValue (val) {
+  let minValue, maxValue
 
-        min_value = checkVariable(val[0])
-        max_value = checkVariable(val[1])
+  // Range
+  if (val[0] === '[' && val[val.length-1] === ']') {
+    val = val.substring(1, val.length - 1)
+    val = val.split(',')
 
-    } else if (val[0] === '>' || val[0] === '<') {
-        let eq = (val[1] == '=')
-        let inequality_type = val[0]
-        
-        val = val.substring((eq ? 2 : 1), val.length)
+    minValue = checkVariable(val[0])
+    maxValue = checkVariable(val[1])
+  } else if (val[0] === '>' || val[0] === '<') {
+    const eq = (val[1] === '=')
+    const inequalityType = val[0]
 
-        if (inequality_type == '>') {
-            min_value = checkVariable(val)
-            max_value = Infinity
-            
-            if (!eq)
-                min_value += 1
+    val = val.substring((eq ? 2 : 1), val.length)
 
-        } else if (inequality_type == '<') {
-            min_value = 0
-            max_value = checkVariable(val)
+    if (inequalityType === '>') {
+      minValue = checkVariable(val)
+      maxValue = Infinity
 
-            if (!eq)
-                max_value += 1
-        }
+      if (!eq) {
+        minValue += 1
+      }
+    } else if (inequalityType === '<') {
+      minValue = 0
+      maxValue = checkVariable(val)
+
+      if (!eq) {
+        maxValue += 1
+      }
     }
+  } else {
+  // single integer value
+    minValue = checkVariable(val)
+    maxValue = minValue
+  }
 
-    // single integer value
-    else {
-        min_value = checkVariable(val)
-        max_value = min_value
-    }
-
-    return [min_value, max_value]
+  return [minValue, maxValue]
 }
 
-function checkVariable(value) {
-    if (value in variables)
-        return parseInt(variables[value])
-    else
-        return parseInt(value)
+function checkVariable (value) {
+  if (value in variables) {
+    return parseInt(variables[value])
+  } else {
+    return parseInt(value)
+  }
 }
 
-checkSyntaxPart = function(part, syntax_list) {
-    var t = syntax_list.includes(part.toLowerCase())
-    return t
+checkSyntaxPart = function (part, syntaxList) {
+  return syntaxList.includes(part.toLowerCase())
 }
 
-function interpreterLog(s) {
-    console.log('INTERPRETER: ' + s)
+function interpreterLog (s) {
+  console.log('INTERPRETER: ' + s)
 }
 
 export { interpretRules }
