@@ -1,3 +1,6 @@
+import { Grid } from './src/simulator.js'
+import { loadPreset } from './src/presets.js'
+
 const canvas = document.getElementById('grid_canvas')
 const ctx = canvas.getContext('2d')
 
@@ -182,3 +185,5 @@ canvas.addEventListener('mousemove', e => {
     draw()
   }
 }, false)
+
+loadPreset('life')
