@@ -27,7 +27,7 @@ let frame = 0;
 let selected_cell_state = "";
 let selected_cell_element = null;
 
-function draw() {
+const draw = function() {
     if (CA_grid == null)
         return;
         
@@ -44,24 +44,24 @@ function draw() {
     }
 }
 
-pauseUnpause = function() {
+const pauseUnpause = function() {
     if (playing)
         pause();
     else
         unpause();
 }
 
-pause = function() {
+const pause = function() {
     playing = false;
     document.getElementById("play-button").innerHTML = "Play";
 }
 
-unpause = function() {
+const unpause = function() {
     playing = true;
     document.getElementById("play-button").innerHTML = "Pause";
 }
 
-play = function() {
+const play = function() {
     if (!playing)
         return;
     
@@ -72,14 +72,14 @@ play = function() {
     requestAnimationFrame(play);
 }
 
-cssAnim = function(element, animation) {
+const cssAnim = function(element, animation) {
     var canv = document.getElementById(element)
     canv.style.animation = 'none';
     canv.offsetWidth;
     canv.style.animation = animation; 
 }
 
-selectCellState = function(state) {
+const selectCellState = function(state) {
     if (selected_cell_element != null)
         selected_cell_element.style.boxShadow = "none";
 
@@ -90,7 +90,7 @@ selectCellState = function(state) {
 
 let CA_rules = null;
 
-updateRules = function(reset=false) {
+const updateRules = function(reset=false) {
     CA_rules = interpretRules(document.getElementById("rule_input_box").value);
 
     var states_box = document.getElementById("state_picker");
@@ -106,7 +106,7 @@ updateRules = function(reset=false) {
     else
         CA_grid.rules = CA_rules;
 
-    if (reset_grid || reset) {
+    if (reset) {
         if (recalc_grid_size)
             recalculateGridSize();
 
@@ -118,20 +118,20 @@ updateRules = function(reset=false) {
     cssAnim("grid_canvas", "rules_save 1s")
 }
 
-clearGrid = function() {
+const clearGrid = function() {
     CA_grid.resetGrid();
     selectCellState(CA_grid.rules.getDefaultState());
     cssAnim("grid_canvas", "grid_clear 1s");
     draw();
 }
 
-resetGrid = function(CA_rules,existent_states=true) {
+const resetGrid = function(CA_rules,existent_states=true) {
     CA_grid.resetGrid(only_override_nonexistant_states=existent_states);
     selectCellState(CA_rules.getDefaultState());
     draw();
 }
 
-evolveDraw = function() {
+const evolveDraw = function() {
     CA_grid.evolve();
     draw();
 }
@@ -144,15 +144,12 @@ draw();
 /////////////////
 
 document.onkeydown = function (e) {
-    e = e || window.event; //Get event
+    e = e || window; //Get event
    
     if (!e.ctrlKey) return;
     
-    var code = e.which || e.keyCode;//Get key code
-   
-    switch (code) {
-        case 83:
-        case 87:
+    switch (e.key) {
+        case "s":
         updateRules();
         draw();
         
@@ -160,7 +157,7 @@ document.onkeydown = function (e) {
         e.stopPropagation();
         break;
 
-        case 88:
+        case "x":
         clearGrid();
         break;
     }
@@ -173,12 +170,12 @@ canvas.addEventListener('mouseup', function() {mouse_down = false}, false);
 canvas.addEventListener('mousemove', e => {
     if (mouse_down) {
         // https://stackoverflow.com/a/42111623
-        var rect = e.target.getBoundingClientRect();
-        var x = e.clientX - rect.left; //x position within the element.
-        var y = e.clientY - rect.top;  //y position within the element.
+        let rect = e.target.getBoundingClientRect();
+        let x = e.clientX - rect.left; //x position within the element.
+        let y = e.clientY - rect.top;  //y position within the element.
 
-        var cx = Math.floor(x/cell_width);
-        var cy = Math.floor(y/cell_height);
+        let cx = Math.floor(x/cell_width);
+        let cy = Math.floor(y/cell_height);
 
         CA_grid.setCellState(cx, cy, selected_cell_state);
 
