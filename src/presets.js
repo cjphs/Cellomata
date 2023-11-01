@@ -1,11 +1,12 @@
-let preset_rulesets = new Map();
+let presetRulesets = new Map();
 
-newTemplate = function() {
-    let sel = document.getElementById("template_selection_box").value;
-    loadPreset(sel);
+loadPreset = function() {
+    let selectedPreset = document.getElementById("template_selection_box").value;
+    document.getElementById("rule_input_box").innerHTML = presetRulesets.get(selectedPreset);
+    updateRules(true);
 }
 
-preset_rulesets.set("life",
+presetRulesets.set("life",
 `Void, Dead, Alive
 @colors
 black, black, white
@@ -28,7 +29,7 @@ Dead otherwise.
 @height 100
 @wrap true`);
 
-preset_rulesets.set("rockpaperscissors",
+presetRulesets.set("rockpaperscissors",
 `Nil, Rock, Paper, Scissors
 @colors
 black, red, yellow, orange
@@ -59,7 +60,7 @@ Scissors otherwise.
 @wrap true`);
 
 
-preset_rulesets.set("cave",
+presetRulesets.set("cave",
 `Void, Air, Wall
 @colors
 black, white, black
@@ -84,8 +85,3 @@ Air.
 @height 64
 @wrap true`
 );
-
-function loadPreset(preset_id) {
-    document.getElementById("rule_input_box").innerHTML = preset_rulesets.get(preset_id);
-    updateRules(true);
-}
