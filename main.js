@@ -2,7 +2,7 @@ import { Grid } from './src/simulator.js'
 import { interpretRules } from './src/interpreter.js'
 import { presetRulesets } from './src/presets.js'
 
-const canvas = document.getElementById('grid_canvas')
+const canvas = document.getElementById('grid-canvas')
 const ctx = canvas.getContext('2d')
 
 const gridWidth = 64
