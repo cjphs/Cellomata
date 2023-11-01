@@ -1,12 +1,12 @@
-let presetRulesets = new Map();
+const presetRulesets = new Map()
 
-loadPreset = function() {
-    let selectedPreset = document.getElementById("template_selection_box").value;
-    document.getElementById("rule_input_box").innerHTML = presetRulesets.get(selectedPreset);
-    updateRules(true);
+const loadPreset = function () {
+  const selectedPreset = document.getElementById('template_selection_box').value
+  document.getElementById('rule_input_box').innerHTML = presetRulesets.get(selectedPreset)
+  updateRules(true)
 }
 
-presetRulesets.set("life",
+presetRulesets.set('life',
 `Void, Dead, Alive
 @colors
 black, black, white
@@ -27,9 +27,9 @@ Dead otherwise.
 
 @width 100
 @height 100
-@wrap true`);
+@wrap true`)
 
-presetRulesets.set("rockpaperscissors",
+presetRulesets.set('rockpaperscissors',
 `Nil, Rock, Paper, Scissors
 @colors
 black, red, yellow, orange
@@ -57,10 +57,9 @@ Scissors otherwise.
 
 @width 100
 @height 100
-@wrap true`);
+@wrap true`)
 
-
-presetRulesets.set("cave",
+presetRulesets.set('cave',
 `Void, Air, Wall
 @colors
 black, white, black
@@ -84,4 +83,6 @@ Air.
 @width 64
 @height 64
 @wrap true`
-);
+)
+
+export { presetRulesets, loadPreset }

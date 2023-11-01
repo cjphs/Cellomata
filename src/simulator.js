@@ -1,166 +1,161 @@
 class Clause {
-    constructor(
-        transform_state,
-        locality_check_type,
-        locality_check_state="",
-        locality_count=-1,
-        chance=1,
-        locality_range_min=0,
-        locality_range_max=9
-    ) 
-    {
-        // End state of the cell, should this transformation be successful
-        this.transform_state = transform_state;
+  constructor (
+    transformState,
+    localityCheckType,
+    localityCheckState = '',
+    localityCount = -1,
+    chance = 1,
+    localityRangeMin = 0,
+    localityRangeMax = 9
+  )
 
-        // Mode of the locality check (nearby/always)
-        this.locality_check_type = locality_check_type;
+  {
+    // End state of the cell, should this transformation be successful
+    this.transformState = transformState
 
-        // State to look for in the locality check
-        this.locality_check_state = locality_check_state;
+    // Mode of the locality check (nearby/always)
+    this.localityCheckType = localityCheckType
 
-        this.locality_check_min = locality_range_min;
-        this.locality_check_max = locality_range_max;
+    // State to look for in the locality check
+    this.localityCheckState = localityCheckState
 
-        // How many cells of the locality check state should be in the neighborhood (-1 = any amount but 0)
-        this.locality_count = locality_count;
+    // How many cells of the locality check state should be in the neighborhood (-1 = any amount but 0)
+    this.localityCount = localityCount
 
-        this.locality_range_min = locality_range_min;
+    this.localityRangeMin = localityRangeMin
 
-        this.locality_range_max = locality_range_max;
+    this.localityRangeMax = localityRangeMax
 
-        // Chance of the transformation occuring (for probabilistic CA)
-        this.chance = chance;
+    // Chance of the transformation occuring (for probabilistic CA)
+    this.chance = chance
 
-        // if not null, then this rule must be true with the next rule
-        this.conjucted_with = null;
+    // if not null, then this rule must be true with the next rule
+    this.conjucted_with = null
 
-        this.do_evaluation = true;
+    this.do_evaluation = true
 
-        this.equality_type = "=";
-    }
+    this.equality_type = '='
+  }
 
-    conjunctWith = function(transformation) {
-        this.conjucted_with = transformation
-    }
+  conjunctWith = function (transformation) {
+    this.conjucted_with = transformation
+  }
 
-    // True -> Cell being investigated becomes the transform_state.
-    evaluate = function(neighborhood_dict) {
-        if (Math.random() >= this.chance)
-            return false;
+  // True -> Cell being investigated becomes the transformState.
+  evaluate = function (neighborhoodDict) {
+    if (Math.random() >= this.chance) { return false }
 
-        switch(this.locality_check_type) {
-            case "always":
-                return true;
-            
-            case "nearby":
-                let n = neighborhood_dict[this.locality_check_state];
+    switch (this.localityCheckType) {
+      case 'always':
+        return true
+      
+      case 'nearby':
+        let n = neighborhoodDict[this.localityCheckState];
 
-                return (this.locality_check_min <= n) && (n <= this.locality_check_max);
-                break;
+        return (this.localityRangeMin <= n) && (n <= this.localityRangeMax)
 
-            case "majority":
-                var most_neighbors_count = 0;
-                var most_neighbors_state = "";
+      case 'majority':
+        let mostNeighborsCount = 0
+        let mostNeighborsState = ''
 
-                states.forEach(s => {
-                    if (neighborhood_dict[s] > most_neighbors_count) {
-                        most_neighbors_count = neighborhood_dict[s];
-                        most_neighbors_state = s;
-                    } 
-                });
+        states.forEach(s => {
+          if (neighborhoodDict[s] > mostNeighborsCount) {
+            mostNeighborsCount = neighborhoodDict[s]
+            mostNeighborsState = s
+          }
+        })
 
-                return (most_neighbors_state == this.locality_check_state);
-                break;
+        return (mostNeighborsState === this.localityCheckState)
 
-            // directional
-            default:
-                if (this.locality_count != 0)
-                    return (neighborhood_dict["*" + this.locality_check_type] == this.locality_check_state)
-                else
-                    return (neighborhood_dict["*" + this.locality_check_type] != this.locality_check_state)
+      // directional
+      default:
+        if (this.localityCount !== 0) {
+          return (neighborhoodDict['*' + this.localityCheckType] === this.localityCheckState)
+        } else {
+          return (neighborhoodDict['*' + this.localityCheckType] !== this.localityCheckState)
         }
     }
+  }
 }
 
 class Ruleset {
-    constructor(states) {
-        this.states = states;
-        this.clauses = {};
+  constructor (states) {
+    this.states = states
+    this.clauses = {}
 
-        this.states.forEach(s => {
-            this.clauses[s] = [];
-        })
+    this.states.forEach(s => {
+      this.clauses[s] = []
+    })
 
-        console.log(this.states);
-        console.log(this.clauses);
-    }
+    console.log(this.states)
+    console.log(this.clauses)
+  }
 
-    addRule = function(from_state, clause) {
-        this.clauses[from_state].push(clause);
-    }
+  addRule = function (fromState, clause) {
+    this.clauses[fromState].push(clause)
+  }
 
-    getDefaultState = function() {
-        return this.states[0];
-    }
+  getDefaultState = function () {
+    return this.states[0]
+  }
 
-    getStatesDict = function(default_value=0) {
-        var dict = {};
-        this.states.forEach(s => {
-            dict[s] = default_value;
-        })
+  getStatesDict = function (defaultValue = 0) {
+    const dict = {}
+    this.states.forEach(s => {
+      dict[s] = defaultValue
+    })
 
-        return dict;
-    }
+    return dict
+  }
 }
 
-
 class Grid {
-    constructor(width, height, rules) {
-        this.width = width;
-        this.height = height;
+  constructor (width, height, rules) {
+    this.width = width
+    this.height = height
 
-        this.rules = rules;
+    this.rules = rules
 
-        this.wrap = true;
+    this.wrap = true
 
-        this.grid = this.getEmptyGrid();
+    this.grid = this.getEmptyGrid()
 
-        this.state_counts = {};
+    this.stateCounts = {}
 
-        
-        this.rules.states.forEach(s => {
-            this.state_counts[s] = 0;
-        })
+    this.rules.states.forEach(s => {
+      this.stateCounts[s] = 0
+    })
+  }
+
+  // creates an empty with the default state
+  getEmptyGrid = function () {
+    const grid = [[]]
+    for (let y = 0; y < this.height; y++) {
+      grid[y] = []
+      for (let x = 0; x < this.width; x++) {
+        grid[y][x] = this.rules.getDefaultState()
+      }
     }
+    return grid
+  }
 
-    // creates an empty with the default state
-    getEmptyGrid = function() {
-        var grid = [[]];
-        for(var y = 0; y < this.height; y++) {
-            grid[y] = [];
-            for(var x = 0; x < this.width; x++) {
-                grid[y][x] = this.rules.getDefaultState();
-            }
+  getStateCounts = function () {
+    return this.stateCounts
+  }
+
+  resetGrid = function (only_override_nonexistant_states = false) {
+    if (!only_override_nonexistant_states) {
+      this.grid = this.getEmptyGrid();
+    } else {
+      for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x++) {
+          if (!this.rules.states.includes(this.getCellState(x, y))) {
+            this.setCellState(x, y, this.rules.getDefaultState())
+          }
         }
-        return grid;
+      }
     }
-
-    getStateCounts = function() {
-        return this.state_counts;
-    }
-
-    resetGrid = function(only_override_nonexistant_states=false) {
-        if (!only_override_nonexistant_states)
-            this.grid = this.getEmptyGrid();
-        else {
-            for(var y = 0; y < this.height; y++) {
-                for(var x = 0; x < this.width; x++) {
-                    if (!this.rules.states.includes(this.getCellState(x,y)))
-                        this.setCellState(x,y,this.rules.getDefaultState());
-                }
-            }
-        }
-    }
+  }
 
     // Check if (x,y) are valid coordinates in the grid
     coordinatesInBounds = function(x,y) {
@@ -199,7 +194,7 @@ class Grid {
 
                 next_grid[y][x] = cell_state;
 
-                var neighborhood_dict = this.rules.getStatesDict();
+                var neighborhoodDict = this.rules.getStatesDict();
 
                 for(var i = x-1; i < x+2; i++) {
                     for(var j = y-1; j < y+2; j++) {
@@ -209,18 +204,18 @@ class Grid {
                         var state = this.getCellState(i,j);
 
                         if (state != "")
-                            neighborhood_dict[state] += 1;
+                            neighborhoodDict[state] += 1;
                     }
                 }
 
-                neighborhood_dict["*below"] = this.getCellState(x,y+1);
-                neighborhood_dict["*above"] = this.getCellState(x,y-1);
-                neighborhood_dict["*left"] = this.getCellState(x-1,y);
-                neighborhood_dict["*right"] = this.getCellState(x+1,y);
-                neighborhood_dict["*bottomleft"] = this.getCellState(x-1,y+1);
-                neighborhood_dict["*bottomright"] = this.getCellState(x+1,y+1);
-                neighborhood_dict["*topleft"] = this.getCellState(x-1,y-1);
-                neighborhood_dict["*topright"] = this.getCellState(x+1,y-1);
+                neighborhoodDict["*below"] = this.getCellState(x,y+1);
+                neighborhoodDict["*above"] = this.getCellState(x,y-1);
+                neighborhoodDict["*left"] = this.getCellState(x-1,y);
+                neighborhoodDict["*right"] = this.getCellState(x+1,y);
+                neighborhoodDict["*bottomleft"] = this.getCellState(x-1,y+1);
+                neighborhoodDict["*bottomright"] = this.getCellState(x+1,y+1);
+                neighborhoodDict["*topleft"] = this.getCellState(x-1,y-1);
+                neighborhoodDict["*topright"] = this.getCellState(x+1,y-1);
 
                 rule_loop:
                 for(let r = 0; r < this.rules.clauses[cell_state].length; r++) {
@@ -229,12 +224,12 @@ class Grid {
                     if (!rule.do_evaluation)
                         continue rule_loop;
                     
-                    let truth_value = rule.evaluate(neighborhood_dict);
+                    let truth_value = rule.evaluate(neighborhoodDict);
                     if (truth_value) {
                         conjunction_check: 
                         while(rule.conjucted_with != null) {
                             rule = rule.conjucted_with;
-                            truth_value = rule.evaluate(neighborhood_dict);
+                            truth_value = rule.evaluate(neighborhoodDict);
 
                             if (!truth_value) {
                                 break conjunction_check;
@@ -242,7 +237,7 @@ class Grid {
                         }
                     }
                     if (truth_value) {
-                        next_grid[y][x] = rule.transform_state;
+                        next_grid[y][x] = rule.transformState;
                         s_counts_new[next_grid[y][x]] += 1;
 
                         break rule_loop;
@@ -251,30 +246,28 @@ class Grid {
             }
         }
 
-        this.state_counts = s_counts_new;
+        this.stateCounts = s_counts_new;
 
         this.grid = next_grid;
     }
 
-    /**
-     * Returns a string 
-     * @param {string} row_delimiter The character by which cells should be spaced out
-     * @param {string} column_delimiter The character by which cells should be spaced out
-     * @returns {string} The integer value associated with the variable
-     */
-    asString = function(multiline=false,column_delimiter=",",row_delimiter="\n") {
-        let s = "";
-        for(var y = 0; y < this.height; y++) {
-            for(var x = 0; x < this.width; x++) {
-                s += this.grid[y][x] + (x < this.width - 1 ? column_delimiter : "");
-            }
-            s += row_delimiter
-        }
-
-        return s;
+  /**
+   * Returns a string
+   * @param {string} row_delimiter The character by which cells should be spaced out
+   * @param {string} column_delimiter The character by which cells should be spaced out
+   * @returns {string} The integer value associated with the variable
+   */
+  asString = function (multiline = false, columnDelimiter = ',', rowDelimiter = '\n') {
+    let s = ''
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        s += this.grid[y][x] + (x < this.width - 1 ? columnDelimiter : '')
+      }
+      s += rowDelimiter
     }
+
+    return s
+  }
 }
 
-exports.Ruleset = Ruleset;
-exports.Clause = Clause;
-exports.Grid = Grid;
+export { Clause, Ruleset, Grid }
