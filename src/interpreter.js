@@ -39,7 +39,7 @@ const interpretRules = function (ruleString) {
 
   let stateBeingDefined = ''
 
-  let variables = {}
+  variables = {}
 
   let state_cols = {}
 
@@ -123,6 +123,7 @@ const interpretRules = function (ruleString) {
                 
                 // new variable
                 } else if (elements.length > 1 & elements[1] == '=') {
+                  console.log("NEW VARIABLE")
                     variables[elements[0]] = elements[2]
                     console.log(variables)
                 }
@@ -198,6 +199,8 @@ const interpretRules = function (ruleString) {
                             locality_max
                         )
 
+                        console.log("CLAUSE:", clause)
+
                         clause.equality_type = equality
 
                         ruleset.addRule(stateBeingDefined, clause)
@@ -251,6 +254,7 @@ function checkValue (val) {
     minValue = checkVariable(val[0])
     maxValue = checkVariable(val[1])
   } else if (val[0] === '>' || val[0] === '<') {
+    console.log("YESYES")
     const eq = (val[1] === '=')
     const inequalityType = val[0]
 
@@ -277,10 +281,14 @@ function checkValue (val) {
     maxValue = minValue
   }
 
+  console.log(val, minValue, maxValue)
+
   return [minValue, maxValue]
 }
 
 const checkVariable = function (value) {
+  console.log("variable...", value)
+  console.log(variables)
   if (value in variables) {
     return parseInt(variables[value])
   } else {

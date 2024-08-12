@@ -2,12 +2,6 @@ const caves = `Void, Air, Wall
 @colors
 black, white, black
 
-p = .5
-
-Void ->
-Air with chance p
-Wall.
-
 q = .9
 
 Air ->
@@ -17,6 +11,11 @@ Air.
 Wall ->
 Wall if >3*Wall nearby
 Air.
+
+# populate empty grid
+Void ->
+Air with chance 0.5
+Wall.
 
 @width 64
 @height 64

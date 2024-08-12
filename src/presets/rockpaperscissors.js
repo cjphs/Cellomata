@@ -2,12 +2,6 @@ const rockpaperscissors = `Nil, Rock, Paper, Scissors
 @colors
 black, red, yellow, orange
 
-Nil ->
-Rock with chance .3
-Paper with chance .3
-Scissors with chance .3
-Nil.
-
 t = 3
 p = 1
 
@@ -22,6 +16,13 @@ Paper otherwise.
 Scissors ->
 Rock with prob p if >=t*Rock nearby
 Scissors otherwise.
+
+# populate empty grid
+Nil ->
+Rock with chance .3
+Paper with chance .3
+Scissors with chance .3
+Nil.
 
 @width 100
 @height 100
