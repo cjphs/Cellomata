@@ -1,6 +1,6 @@
 CA Script is a cellular automata simulator & editor with simple rule-set scripting using a custom notation language. 
 
-https://cjphs.github.io/ca_script/web/
+https://cjphs.github.io/ca_script/dist/
 
 
 ## The technical nitty-gritty
