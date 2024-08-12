@@ -1,4 +1,4 @@
-import { Clause, Grid, Ruleset } from './simulator.js'
+import { Clause, Ruleset } from './simulator.js'
 
 const Modes = {
   READ_STATES: 0,
@@ -51,7 +51,7 @@ const interpretRules = function (ruleString) {
 
     if (line.charAt(0) !== '#' && line.trim() !== '') {
       switch (interpreterState) {
-        case Modes.READ_STATES:
+        case Modes.READ_STATES: {
           const newStates = line.replaceAll(' ', '').split(',')
 
           let stateCount = 0
@@ -68,8 +68,8 @@ const interpretRules = function (ruleString) {
 
           interpreterState = Modes.SKIP
           break
-
-        case Modes.COLORS:
+        }
+        case Modes.COLORS: {
           const cols = line.replaceAll(' ','').split(',')
           let i = 0
           states.forEach(s => {
@@ -77,8 +77,8 @@ const interpretRules = function (ruleString) {
           })
           interpreterState = Modes.SKIP
           break
-
-        case Modes.SKIP:
+        }
+        case Modes.SKIP: {
           var elements = line.split(' ')
 
                 if (checkSyntaxPart(elements[0], SYNTAX_SIM_WIDTH)) {
@@ -127,8 +127,8 @@ const interpretRules = function (ruleString) {
                 }
 
                 break
-
-            case Modes.DEFINE_CONDITIONALS:
+            }
+            case Modes.DEFINE_CONDITIONALS: {
                 interpreterLog('DEFINE_CONDITIONALS')
 
                 elements = line.split(' ')
@@ -223,6 +223,7 @@ const interpretRules = function (ruleString) {
                 }
 
                 break
+            }
         }
     }
   })

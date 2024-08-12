@@ -46,15 +46,15 @@ class Clause {
     if (Math.random() >= this.chance) { return false }
 
     switch (this.localityCheckType) {
-      case 'always':
+      case 'always': {
         return true
-      
-      case 'nearby':
+      }
+      case 'nearby': {
         let n = neighborhoodDict[this.localityCheckState];
 
         return (this.localityRangeMin <= n) && (n <= this.localityRangeMax)
-
-      case 'majority':
+      }
+      case 'majority': {
         let mostNeighborsCount = 0
         let mostNeighborsState = ''
 
@@ -66,14 +66,15 @@ class Clause {
         })
 
         return (mostNeighborsState === this.localityCheckState)
-
+      }
       // directional
-      default:
+      default: {
         if (this.localityCount !== 0) {
           return (neighborhoodDict['*' + this.localityCheckType] === this.localityCheckState)
         } else {
           return (neighborhoodDict['*' + this.localityCheckType] !== this.localityCheckState)
         }
+      }
     }
   }
 }
@@ -263,7 +264,7 @@ class Grid {
    * @param {string} column_delimiter The character by which cells should be spaced out
    * @returns {string} The integer value associated with the variable
    */
-  asString = function (multiline = false, columnDelimiter = ',', rowDelimiter = '\n') {
+  asString = function (columnDelimiter = ',', rowDelimiter = '\n') {
     let s = ''
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {

@@ -14,8 +14,6 @@ let cellHeight = canvas.clientHeight / gridHeight
 function recalculateGridSize () {
   pause()
 
-  console.log("???")
-
   cellWidth = canvas.clientWidth / gridWidth
   cellHeight = canvas.clientHeight / gridHeight
 
@@ -23,9 +21,6 @@ function recalculateGridSize () {
   grid.height = gridHeight
 
   resetGrid(rules, false)
-
-
-  console.log("???>>")
 }
 
 let grid = null
@@ -88,8 +83,8 @@ const play = function () {
 }
 
 const cssAnim = function (element, animation) {
-  return;
   const canv = document.getElementById(element)
+  if (canv == null) { return }
   canv.style.animation = 'none'
   canv.offsetWidth
   canv.style.animation = animation
@@ -129,10 +124,6 @@ const updateRules = function (reset = false) {
 
   statesBox.innerHTML = ''
   rules.states.forEach(s => {
-    const newCell = "<div id='" + s + "' class='state' style='background-color: " + stateCols[s] + "></div> "
-    // statesBox.innerHTML += ()
-    // add onclick
-    // onclick='selectCellState(\"" + s + "\")'
     const cellElement = document.createElement('div')
     cellElement.id = s
     cellElement.className = 'state'
