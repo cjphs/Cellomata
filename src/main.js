@@ -5,14 +5,16 @@ import presetRulesets from './presets'
 const canvas = document.getElementById('grid-canvas')
 const ctx = canvas.getContext('2d')
 
-const gridWidth = 64
-const gridHeight = 64
+let gridWidth = 64
+let gridHeight = 64
 
 let cellWidth = canvas.clientWidth / gridWidth
 let cellHeight = canvas.clientHeight / gridHeight
 
 function recalculateGridSize () {
   pause()
+
+  console.log("???")
 
   cellWidth = canvas.clientWidth / gridWidth
   cellHeight = canvas.clientHeight / gridHeight
@@ -21,6 +23,9 @@ function recalculateGridSize () {
   grid.height = gridHeight
 
   resetGrid(rules, false)
+
+
+  console.log("???>>")
 }
 
 let grid = null
@@ -57,6 +62,7 @@ const pauseUnpause = function () {
     pause()
   } else {
     unpause()
+    play()
   }
 }
 
@@ -71,6 +77,7 @@ const unpause = function () {
 }
 
 const play = function () {
+  console.log('frame')
   if (!playing) { return }
 
   if (frame++ % 10 === 0) {
@@ -79,8 +86,6 @@ const play = function () {
 
   requestAnimationFrame(play)
 }
-
-play()
 
 const cssAnim = function (element, animation) {
   return;
@@ -107,6 +112,9 @@ const updateRules = function (reset = false) {
   if (ruleString == '') { return }
 
   const interpreted = interpretRules (ruleString)
+
+  gridWidth = interpreted.gridWidth
+  gridHeight = interpreted.gridHeight
 
   rules = interpreted.ruleset
   console.log(rules)
@@ -137,8 +145,13 @@ const updateRules = function (reset = false) {
     statesBox.appendChild(cellElement)
   });
 
-  if (grid == null) {
+  if (
+    grid == null ||
+    interpreted.gridWidth != grid.width ||
+    interpreted.gridHeight != grid.height)
+    {
     grid = new Grid(interpreted.gridWidth, interpreted.gridHeight, rules, stateCols, interpreted.wrap)
+    recalculateGridSize()
   }
   else {
     grid.rules = rules;
