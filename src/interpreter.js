@@ -27,8 +27,6 @@ let states = []
 let variables = {}
 
 const interpretRules = function (ruleString) {
-  console.log(ruleString)
-
   let grid_width = 100;
   let grid_height = 100;
   let wrap = false;

@@ -1,4 +1,4 @@
-0, n, e, s, w, border, emitter
+const city = `0, n, e, s, w, border, emitter
 @colors
 black, white, gray, white, gray, maroon, orange
 
@@ -26,4 +26,6 @@ border if 3*e nearby
 border if 3*s nearby
 border if 3*w nearby
 emitter with chance 0.00025 if 8*0 nearby
-0 otherwise.
+0 otherwise.`
+
+export default city
