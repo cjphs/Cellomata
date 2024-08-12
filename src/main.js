@@ -1,4 +1,4 @@
-import { Grid } from './simulator.js'
+import Grid from './Grid.js'
 import { interpretRules } from './interpreter.js'
 import presetRulesets from './presets'
 
@@ -247,6 +247,10 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('updateRules').addEventListener('click', updateRules)
   document.getElementById('clear-grid').addEventListener('click', clearGrid)
   document.getElementById('play-button').addEventListener('click', pauseUnpause)
+
+  document.getElementById('template_selection_box').addEventListener('change', function () {
+    loadPreset(this.value)
+  })
 })
 
 export { updateRules, clearGrid, evolveDraw, pauseUnpause, play, recalculateGridSize, loadPreset }

@@ -1,4 +1,4 @@
 require('./interpreter.js')
 require('./presets.js')
-require('./simulator.js')
+require('./Grid.js')
 require('./main.js')

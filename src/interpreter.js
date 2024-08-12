@@ -1,4 +1,5 @@
-import { Clause, Ruleset } from './simulator.js'
+import Clause from './Clause.js'
+import Ruleset from './Ruleset.js'
 
 const Modes = {
   READ_STATES: 0,
