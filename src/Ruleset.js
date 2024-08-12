@@ -6,9 +6,6 @@ class Ruleset {
         this.states.forEach(s => {
         this.clauses[s] = []
         })
-
-        console.log(this.states)
-        console.log(this.clauses)
     }
 
     addRule = function (fromState, clause) {

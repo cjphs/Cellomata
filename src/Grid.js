@@ -13,7 +13,6 @@ class Grid {
 
     this.stateCols = {}
 
-    console.log("maybe")
     this.rules.states.forEach(s => {
       this.stateCounts[s] = 0
     })
@@ -21,7 +20,6 @@ class Grid {
 
   // creates an empty with the default state
   getEmptyGrid = function () {
-    console.log("callme")
     const grid = [[]]
     for (let y = 0; y < this.height; y++) {
       grid[y] = []
@@ -38,7 +36,6 @@ class Grid {
 
   resetGrid = function (only_override_nonexistant_states = false) {
     if (!only_override_nonexistant_states) {
-      console.log("hey i just")
       this.grid = this.getEmptyGrid();
     } else {
       for (let y = 0; y < this.height; y++) {
@@ -75,7 +72,6 @@ class Grid {
 
     // Evolve the grid by one step
     evolve = function() {
-        console.log('hey i just')
         var next_grid = this.getEmptyGrid();
 
         let s_counts_new = {};

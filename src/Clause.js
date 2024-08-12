@@ -64,7 +64,7 @@ class Clause {
               mostNeighborsState = s
             }
           })
-  
+
           return (mostNeighborsState === this.localityCheckState)
         }
         // directional

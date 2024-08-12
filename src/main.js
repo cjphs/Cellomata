@@ -34,10 +34,7 @@ let selectedCellElement = null
 let stateCols = {}
 
 const draw = function () {
-  console.log(grid)
   if (grid == null) { return }
-
-  console.log(grid)
 
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
@@ -72,7 +69,6 @@ const unpause = function () {
 }
 
 const play = function () {
-  console.log('frame')
   if (!playing) { return }
 
   if (frame++ % 10 === 0) {
@@ -112,14 +108,8 @@ const updateRules = function (reset = false) {
   gridHeight = interpreted.gridHeight
 
   rules = interpreted.ruleset
-  console.log(rules)
-
   stateCols = interpreted.stateCols
 
-  console.log(interpreted)
-
-  console.log('wah?')
-  
   const statesBox = document.getElementById('state_picker')
 
   statesBox.innerHTML = ''
@@ -148,8 +138,6 @@ const updateRules = function (reset = false) {
     grid.rules = rules;
   }
 
-  console.log(grid)
-
   if (reset) {
     // if (recalcGridSize) { recalculateGridSize() }
     recalculateGridSize()
@@ -163,7 +151,6 @@ const updateRules = function (reset = false) {
 
 const clearGrid = function () {
   grid.resetGrid()
-  console.log('rerrr')
   selectCellState(grid.rules.getDefaultState())
   cssAnim('grid_canvas', 'grid_clear 1s')
   draw()
@@ -228,20 +215,13 @@ canvas.addEventListener('mousemove', e => {
 
 const loadPreset = function (preset) {
   rules = presetRulesets.get(preset)
-  console.log(rules)
   document.getElementById('rule_input_box').value = rules
   updateRules(true)
 }
 
-console.log('wuppa')
-
-loadPreset('life')
-
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('step').addEventListener('click', function() {
-    console.log("evolve")
     grid.evolve()
-    console.log("draw")
     draw()
   })  
   document.getElementById('updateRules').addEventListener('click', updateRules)
@@ -251,6 +231,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('template_selection_box').addEventListener('change', function () {
     loadPreset(this.value)
   })
+
+  loadPreset('life')
 })
 
 export { updateRules, clearGrid, evolveDraw, pauseUnpause, play, recalculateGridSize, loadPreset }
