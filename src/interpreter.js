@@ -1,10 +1,10 @@
-import { Ruleset } from './simulator.js'
+import Clause from './Clause.js'
+import Ruleset from './Ruleset.js'
 
 const Modes = {
   READ_STATES: 0,
   SKIP: 1,
   DEFINE_CONDITIONALS: 2,
-
   COLORS: 100
 }
 
@@ -27,7 +27,9 @@ let states = []
 let variables = {}
 
 const interpretRules = function (ruleString) {
-  console.log(ruleString)
+  let grid_width = 100;
+  let grid_height = 100;
+  let wrap = false;
 
   let interpreterState = Modes.READ_STATES
 
@@ -37,7 +39,7 @@ const interpretRules = function (ruleString) {
 
   variables = {}
 
-  state_cols = {}
+  let state_cols = {}
 
   recalc_grid_size = false
 
@@ -48,7 +50,7 @@ const interpretRules = function (ruleString) {
 
     if (line.charAt(0) !== '#' && line.trim() !== '') {
       switch (interpreterState) {
-        case Modes.READ_STATES:
+        case Modes.READ_STATES: {
           const newStates = line.replaceAll(' ', '').split(',')
 
           let stateCount = 0
@@ -63,8 +65,8 @@ const interpretRules = function (ruleString) {
 
           interpreterState = Modes.SKIP
           break
-
-        case Modes.COLORS:
+        }
+        case Modes.COLORS: {
           const cols = line.replaceAll(' ','').split(',')
           let i = 0
           states.forEach(s => {
@@ -72,9 +74,9 @@ const interpretRules = function (ruleString) {
           })
           interpreterState = Modes.SKIP
           break
-
-        case Modes.SKIP:
-          elements = line.split(' ')
+        }
+        case Modes.SKIP: {
+          var elements = line.split(' ')
 
                 if (checkSyntaxPart(elements[0], SYNTAX_SIM_WIDTH)) {
                     var w
@@ -105,11 +107,7 @@ const interpretRules = function (ruleString) {
                 }
 
                 else if (checkSyntaxPart(elements[0], SYNTAX_SIM_WRAP)) {
-                    var wrap = (elements[1] === 'true')
-
-                    if (CA_grid != null) {
-                        CA_grid.wrap = wrap
-                    }
+                    wrap = (elements[1] === 'true')
                 }
 
                 if (checkSyntaxPart(elements[0], SYNTAX_SIM_COLOURS))
@@ -122,17 +120,14 @@ const interpretRules = function (ruleString) {
                 // new variable
                 } else if (elements.length > 1 & elements[1] == '=') {
                     variables[elements[0]] = elements[2]
-                    console.log(variables)
                 }
 
                 break
-
-            case Modes.DEFINE_CONDITIONALS:
+            }
+            case Modes.DEFINE_CONDITIONALS: {
                 interpreterLog('DEFINE_CONDITIONALS')
 
                 elements = line.split(' ')
-
-                console.log(elements[elements.length-1].slice(-1))
 
                 var termination = false
                 
@@ -184,7 +179,7 @@ const interpretRules = function (ruleString) {
                             locality_state = locality[0]
                         }
 
-                        locality_type = elements[3]
+                        const locality_type = elements[3]
 
                         let clause = new Clause(
                             elements[0],
@@ -192,8 +187,8 @@ const interpretRules = function (ruleString) {
                             locality_state,
                             locality_count,
                             chance,
-                            locality_check_min=locality_min,
-                            locality_check_max=locality_max
+                            locality_min,
+                            locality_max
                         )
 
                         clause.equality_type = equality
@@ -222,11 +217,18 @@ const interpretRules = function (ruleString) {
                 }
 
                 break
+            }
         }
     }
   })
 
-  return ruleset
+  return {
+    gridWidth: grid_width,
+    gridHeight: grid_height,
+    ruleset: ruleset,
+    wrap: wrap,
+    stateCols: state_cols
+  }
 }
 
 function checkValue (val) {
@@ -285,4 +287,4 @@ const interpreterLog = function (s) {
   console.log('INTERPRETER: ' + s)
 }
 
-export { interpretRules }
+export { interpretRules, recalc_grid_size, reset_grid, state_cols, variables }

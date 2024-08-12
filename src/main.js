@@ -1,12 +1,12 @@
-import { Grid } from './src/simulator.js'
-import { interpretRules } from './src/interpreter.js'
-import { presetRulesets } from './src/presets.js'
+import Grid from './Grid.js'
+import { interpretRules } from './interpreter.js'
+import presetRulesets from './presets'
 
 const canvas = document.getElementById('grid-canvas')
 const ctx = canvas.getContext('2d')
 
-const gridWidth = 64
-const gridHeight = 64
+let gridWidth = 64
+let gridHeight = 64
 
 let cellWidth = canvas.clientWidth / gridWidth
 let cellHeight = canvas.clientHeight / gridHeight
@@ -31,6 +31,8 @@ let frame = 0
 let selectedCellState = ''
 let selectedCellElement = null
 
+let stateCols = {}
+
 const draw = function () {
   if (grid == null) { return }
 
@@ -52,6 +54,7 @@ const pauseUnpause = function () {
     pause()
   } else {
     unpause()
+    play()
   }
 }
 
@@ -77,6 +80,7 @@ const play = function () {
 
 const cssAnim = function (element, animation) {
   const canv = document.getElementById(element)
+  if (canv == null) { return }
   canv.style.animation = 'none'
   canv.offsetWidth
   canv.style.animation = animation
@@ -95,26 +99,48 @@ const selectCellState = function (state) {
 let rules = null
 
 const updateRules = function (reset = false) {
-  rules = interpretRules (document.getElementById('rule_input_box').value)
+  const ruleString = document.getElementById('rule_input_box').value || rules
+  if (ruleString == '') { return }
+
+  const interpreted = interpretRules (ruleString)
+
+  gridWidth = interpreted.gridWidth
+  gridHeight = interpreted.gridHeight
+
+  rules = interpreted.ruleset
+  stateCols = interpreted.stateCols
 
   const statesBox = document.getElementById('state_picker')
 
   statesBox.innerHTML = ''
-
   rules.states.forEach(s => {
-    statesBox.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + stateCols[s] + "' onclick='selectCellState(\"" + s + "\")'></div> ")
+    const cellElement = document.createElement('div')
+    cellElement.id = s
+    cellElement.className = 'state'
+    cellElement.style.backgroundColor = stateCols[s]
+    
+    cellElement.onclick = function () {
+      selectCellState(s)
+    }
+
+    statesBox.appendChild(cellElement)
   });
 
-  if (grid == null) {
-    grid = new Grid(gridWidth, gridHeight, rules)
+  if (
+    grid == null ||
+    interpreted.gridWidth != grid.width ||
+    interpreted.gridHeight != grid.height)
+    {
+    grid = new Grid(interpreted.gridWidth, interpreted.gridHeight, rules, stateCols, interpreted.wrap)
+    recalculateGridSize()
   }
   else {
     grid.rules = rules;
   }
 
   if (reset) {
-    if (recalcGridSize) { recalculateGridSize() }
-
+    // if (recalcGridSize) { recalculateGridSize() }
+    recalculateGridSize()
     resetGrid(rules)
   } else {
     selectCellState(selectedCellState);
@@ -131,7 +157,7 @@ const clearGrid = function () {
 }
 
 const resetGrid = function (rules, existingStates = true) {
-  grid.resetGrid(only_override_nonexistant_states = existingStates)
+  grid.resetGrid(existingStates)
   selectCellState(rules.getDefaultState())
   draw()
 }
@@ -187,10 +213,26 @@ canvas.addEventListener('mousemove', e => {
   }
 }, false)
 
-const loadPreset = function () {
-  const selectedPreset = document.getElementById('template_selection_box').value
-  document.getElementById('rule_input_box').innerHTML = presetRulesets.get(selectedPreset)
+const loadPreset = function (preset) {
+  rules = presetRulesets.get(preset)
+  document.getElementById('rule_input_box').value = rules
   updateRules(true)
 }
 
-loadPreset('life')
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('step').addEventListener('click', function() {
+    grid.evolve()
+    draw()
+  })  
+  document.getElementById('updateRules').addEventListener('click', updateRules)
+  document.getElementById('clear-grid').addEventListener('click', clearGrid)
+  document.getElementById('play-button').addEventListener('click', pauseUnpause)
+
+  document.getElementById('template_selection_box').addEventListener('change', function () {
+    loadPreset(this.value)
+  })
+
+  loadPreset('life')
+})
+
+export { updateRules, clearGrid, evolveDraw, pauseUnpause, play, recalculateGridSize, loadPreset }

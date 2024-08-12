@@ -1,3 +1,4 @@
+const trontinis = `
 # TRON
 # by cjphs
 
@@ -48,4 +49,6 @@ Past ->
 Past2.
 
 Past2 ->
-Grid.
+Grid.`
+
+export default trontinis

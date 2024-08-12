@@ -1,4 +1,4 @@
-0, 1, 2, 3, 4, 5
+const texture=`0, 1, 2, 3, 4, 5
 @colors
 black, #888888, #666666, #444444, #222222, #111111
 
@@ -25,4 +25,6 @@ s = 0.001
 
 1 becomes:
 3 if 0*0 nearby and 0*1 nearby
-1 otherwise.
+1 otherwise.`
+
+export default texture
