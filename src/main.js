@@ -1,6 +1,6 @@
-import { Grid } from './src/simulator.js'
-import { interpretRules } from './src/interpreter.js'
-import { presetRulesets } from './src/presets.js'
+import { Grid } from './simulator.js'
+import { interpretRules } from './interpreter.js'
+import presetRulesets from './presets'
 
 const canvas = document.getElementById('grid-canvas')
 const ctx = canvas.getContext('2d')
@@ -31,8 +31,13 @@ let frame = 0
 let selectedCellState = ''
 let selectedCellElement = null
 
+let stateCols = {}
+
 const draw = function () {
+  console.log(grid)
   if (grid == null) { return }
+
+  console.log(grid)
 
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
@@ -75,7 +80,10 @@ const play = function () {
   requestAnimationFrame(play)
 }
 
+play()
+
 const cssAnim = function (element, animation) {
+  return;
   const canv = document.getElementById(element)
   canv.style.animation = 'none'
   canv.offsetWidth
@@ -95,26 +103,52 @@ const selectCellState = function (state) {
 let rules = null
 
 const updateRules = function (reset = false) {
-  rules = interpretRules (document.getElementById('rule_input_box').value)
+  const ruleString = document.getElementById('rule_input_box').value || rules
+  if (ruleString == '') { return }
 
+  const interpreted = interpretRules (ruleString)
+
+  rules = interpreted.ruleset
+  console.log(rules)
+
+  stateCols = interpreted.stateCols
+
+  console.log(interpreted)
+
+  console.log('wah?')
+  
   const statesBox = document.getElementById('state_picker')
 
   statesBox.innerHTML = ''
-
   rules.states.forEach(s => {
-    statesBox.innerHTML += ("<div id='" + s + "' class='state' style='background-color: " + stateCols[s] + "' onclick='selectCellState(\"" + s + "\")'></div> ")
+    const newCell = "<div id='" + s + "' class='state' style='background-color: " + stateCols[s] + "></div> "
+    // statesBox.innerHTML += ()
+    // add onclick
+    // onclick='selectCellState(\"" + s + "\")'
+    const cellElement = document.createElement('div')
+    cellElement.id = s
+    cellElement.className = 'state'
+    cellElement.style.backgroundColor = stateCols[s]
+    
+    cellElement.onclick = function () {
+      selectCellState(s)
+    }
+
+    statesBox.appendChild(cellElement)
   });
 
   if (grid == null) {
-    grid = new Grid(gridWidth, gridHeight, rules)
+    grid = new Grid(interpreted.gridWidth, interpreted.gridHeight, rules, stateCols, interpreted.wrap)
   }
   else {
     grid.rules = rules;
   }
 
-  if (reset) {
-    if (recalcGridSize) { recalculateGridSize() }
+  console.log(grid)
 
+  if (reset) {
+    // if (recalcGridSize) { recalculateGridSize() }
+    recalculateGridSize()
     resetGrid(rules)
   } else {
     selectCellState(selectedCellState);
@@ -125,13 +159,14 @@ const updateRules = function (reset = false) {
 
 const clearGrid = function () {
   grid.resetGrid()
+  console.log('rerrr')
   selectCellState(grid.rules.getDefaultState())
   cssAnim('grid_canvas', 'grid_clear 1s')
   draw()
 }
 
 const resetGrid = function (rules, existingStates = true) {
-  grid.resetGrid(only_override_nonexistant_states = existingStates)
+  grid.resetGrid(existingStates)
   selectCellState(rules.getDefaultState())
   draw()
 }
@@ -187,10 +222,27 @@ canvas.addEventListener('mousemove', e => {
   }
 }, false)
 
-const loadPreset = function () {
-  const selectedPreset = document.getElementById('template_selection_box').value
-  document.getElementById('rule_input_box').innerHTML = presetRulesets.get(selectedPreset)
+const loadPreset = function (preset) {
+  rules = presetRulesets.get(preset)
+  console.log(rules)
+  document.getElementById('rule_input_box').value = rules
   updateRules(true)
 }
 
+console.log('wuppa')
+
 loadPreset('life')
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('step').addEventListener('click', function() {
+    console.log("evolve")
+    grid.evolve()
+    console.log("draw")
+    draw()
+  })  
+  document.getElementById('updateRules').addEventListener('click', updateRules)
+  document.getElementById('clear-grid').addEventListener('click', clearGrid)
+  document.getElementById('play-button').addEventListener('click', pauseUnpause)
+})
+
+export { updateRules, clearGrid, evolveDraw, pauseUnpause, play, recalculateGridSize, loadPreset }

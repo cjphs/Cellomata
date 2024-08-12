@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../style.css">
 
 <script>
     const BROWSER_MODE = true;
@@ -18,16 +18,16 @@
         </div>
 
         <div class="controls">
-          <button id="clear-grid" style="width:100px; height:50%; margin-top:10px" onclick="clearGrid()">Clear</button>
-          <button style="width:100px; height:50%; margin-top:10px" onclick="evolveDraw()">Step</button> 
-          <button id="play-button" style="width:100px; height:50%; margin-top:10px" onclick="pauseUnpause(); play()">Play</button>
+          <button id="clear-grid" style="width:100px; height:50%; margin-top:10px">Clear</button>
+          <button id="step" style="width:100px; height:50%; margin-top:10px">Step</button> 
+          <button id="play-button" style="width:100px; height:50%; margin-top:10px">Play</button>
         </div>
       </div>
 
       <!-- RULE INTERPRETER -->
       <div class="vcontainer" style="position:absolute; right:100%">
         <div style="height:105px">
-          <select id="template_selection_box" style="position:absolute; left:0; top:80px" onchange="loadPreset()">
+          <select id="template_selection_box" style="position:absolute; left:0; top:80px">
             <option value="life">Game of Life</option>
             <option value="rockpaperscissors">Rock Paper Scissors</option>
             <option value="cave">Cave</option> 
@@ -39,7 +39,7 @@
         </div>
 
         <div style="height:100px">
-          <button style="width:100%; height:50%; margin-top:10px" onclick="updateRules()">Interpret (CTRL+S)</button>
+          <button style="width:100%; height:50%; margin-top:10px" id="updateRules">Interpret (CTRL+S)</button>
         </div>
       </div>
 
@@ -52,6 +52,5 @@
       </div>
     </div>
   </body>
+  <script src="./main.js"></script>
 </html>
-
-<script type="module" src="main.js"></script>

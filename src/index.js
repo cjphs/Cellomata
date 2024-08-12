@@ -1,2 +1,4 @@
-exports.simulator = require("./simulator.js");
-exports.interpreter = require("./interpreter.js");
+require('./interpreter.js')
+require('./presets.js')
+require('./simulator.js')
+require('./main.js')
