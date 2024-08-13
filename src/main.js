@@ -249,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function() {
   let textarea = document.querySelector('textarea[name="rule_input_box"]')
   textarea.setAttribute('hidden', true)
 
-  editor.getSession().setValue(textarea.value)
   editor.setTheme("ace/theme/monokai");
   editor.getSession().setMode('ace/mode/python')
 
