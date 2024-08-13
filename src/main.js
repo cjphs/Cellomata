@@ -2,6 +2,8 @@ import Grid from './Grid.js'
 import { interpretRules } from './interpreter.js'
 import presetRulesets from './presets'
 
+import ace from 'ace-builds'
+
 const canvas = document.getElementById('grid-canvas')
 const ctx = canvas.getContext('2d')
 
@@ -99,7 +101,7 @@ const selectCellState = function (state) {
 let rules = null
 
 const updateRules = function (reset = false) {
-  const ruleString = document.getElementById('rule_input_box').value || rules
+  const ruleString = editor.getSession().getValue() || rules
   if (ruleString == '') { return }
 
   const interpreted = interpretRules (ruleString)
@@ -215,9 +217,12 @@ canvas.addEventListener('mousemove', e => {
 
 const loadPreset = function (preset) {
   rules = presetRulesets.get(preset)
-  document.getElementById('rule_input_box').value = rules
+  // document.getElementById('rule_input_box').value = rules
+  editor.getSession().setValue(rules)
   updateRules(true)
 }
+
+let editor
 
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('step').addEventListener('click', function() {
@@ -230,6 +235,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('template_selection_box').addEventListener('change', function () {
     loadPreset(this.value)
+  })
+
+
+  editor = ace.edit('rule_input_box', {
+    mode: "ace/mode/javascript",
+    selectionStyle: "text"
+})
+
+  // get element with name rule_input_box
+  let textarea = document.querySelector('textarea[name="rule_input_box"]')
+  textarea.setAttribute('hidden', true)
+
+  editor.getSession().setValue(textarea.value)
+  editor.setTheme("ace/theme/monokai");
+  editor.getSession().setMode('ace/mode/python')
+
+  editor.getSession().on('change', function () {
+    textarea.value = editor.getSession().getValue()
   })
 
   loadPreset('life')

@@ -41,8 +41,13 @@ button:hover {
     vertical-align: middle;
 }
 
-.editor {
+/* .editor {
     font-family: 'Courier New', Courier, monospace;
+} */
+
+#rule_input_box {
+    width: 100%;
+    height: 200px;
 }
 
 .state_picker {
@@ -80,7 +85,7 @@ button:hover {
 
     font-family: Arial;
 }
-
+/* 
 #rule_input_box {
     color: white;
     border-style: none;
@@ -89,7 +94,7 @@ button:hover {
     height:500px;
     width:100%;
     background-color: rgb(75, 75, 75);
-}
+} */
 
 @keyframes rules_save {
     from {
