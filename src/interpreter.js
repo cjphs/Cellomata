@@ -8,10 +8,11 @@ const Modes = {
   COLORS: 100,
 };
 
-const SYNTAX_WITH = ["with", "w/", "w"];
+const SYNTAX_WITH = ["with", "w"];
 const SYNTAX_CHANCE = ["chance", "probability", "prob", "%"];
-const SYNTAX_BECOMES = ["becomes:", "->", ":"];
+const SYNTAX_BECOMES = ["becomes:", "->"];
 const SYNTAX_AND = ["and", "&"];
+const SYNTAX_IS = ["is", "="];
 
 const SYNTAX_SIM_WIDTH = ["@width", "@w"];
 const SYNTAX_SIM_HEIGHT = ["@height", "@h"];
@@ -113,7 +114,7 @@ const interpretRules = function (ruleString) {
             interpreterState = Modes.DEFINE_CONDITIONALS;
 
             // new variable
-          } else if ((elements.length > 1) & (elements[1] == "=")) {
+          } else if ((elements.length > 1) & (checkSyntaxPart(elements[1], SYNTAX_IS))) {
             variables[elements[0]] = elements[2];
           }
 
