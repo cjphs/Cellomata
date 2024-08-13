@@ -3,6 +3,8 @@ import { interpretRules } from './interpreter.js'
 import presetRulesets from './presets'
 
 import ace from 'ace-builds'
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/mode-python";
 
 const canvas = document.getElementById('grid-canvas')
 const ctx = canvas.getContext('2d')
