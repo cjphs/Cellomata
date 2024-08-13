@@ -176,8 +176,6 @@ const interpretRules = function (ruleString) {
 
             const locality_type = elements[3];
 
-            console.log(locality_states);
-
             locality_states.forEach((locality_state) => {
               let clause = new Clause(
                 elements[0],
