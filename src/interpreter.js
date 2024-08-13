@@ -161,7 +161,7 @@ const interpretRules = function (ruleString) {
                     while(!done) {
                         var locality = elements[2].split('*')
 
-                        let locality_state = ''
+                        let locality_states = []
                         let locality_count = -1
                         let equality = '='
 
@@ -174,38 +174,42 @@ const interpretRules = function (ruleString) {
                             locality_min = r[0]
                             locality_max = r[1]
 
-                            locality_state = locality[1]
+                            locality_states = locality[1].split('||')
                         } else {
-                            locality_state = locality[0]
+                            locality_states = locality[0].split('||')
                         }
 
                         const locality_type = elements[3]
 
-                        let clause = new Clause(
-                            elements[0],
-                            locality_type,
-                            locality_state,
-                            locality_count,
-                            chance,
-                            locality_min,
-                            locality_max
-                        )
+                        console.log(locality_states)
 
-                        clause.equality_type = equality
+                        locality_states.forEach(locality_state => {
+                          let clause = new Clause(
+                              elements[0],
+                              locality_type,
+                              locality_state,
+                              locality_count,
+                              chance,
+                              locality_min,
+                              locality_max
+                          )
 
-                        ruleset.addRule(stateBeingDefined, clause)
+                          clause.equality_type = equality
+                          ruleset.addRule(stateBeingDefined, clause)
 
-                        if (prev_transform != null) {
+
+                          if (prev_transform != null) {
                             prev_transform.conjunctWith(clause)
                             clause.do_evaluation = false
-                        }
+                          }
 
-                        if (elements.length > 4 && checkSyntaxPart(elements[4], SYNTAX_AND)) {
-                            prev_transform = clause
-                            elements.splice(2,3)
-                        } else {
-                            done = true
-                        }
+                          if (elements.length > 4 && checkSyntaxPart(elements[4], SYNTAX_AND)) {
+                              prev_transform = clause
+                              elements.splice(2,3)
+                          } else {
+                              done = true
+                          }
+                        })
                     }
                 } else {
                     let clause = new Clause(elements[0], 'always', '', -1, chance)
