@@ -257,7 +257,6 @@ canvas.addEventListener(
 
 const loadPreset = function (preset) {
   rules = presetRulesets.get(preset);
-  // document.getElementById('rule_input_box').value = rules
 
   window.history.pushState(
     { ruleset: rules },
@@ -293,7 +292,6 @@ document.addEventListener("DOMContentLoaded", function () {
     selectionStyle: "text",
   });
 
-  // get element with name rule_input_box
   let textarea = document.querySelector('textarea[name="rule_input_box"]');
   textarea.setAttribute("hidden", true);
 
