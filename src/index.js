@@ -1,4 +1,4 @@
-require("./interpreter.js");
-require("./presets.js");
-require("./Grid.js");
-require("./main.js");
+import "./interpreter.js";
+import "./presets.js";
+import "./Grid.js";
+import "./main.js";
