@@ -1,122 +1,124 @@
-html, body {
-    background-color: rgb(27, 27, 27);
-    margin: 0;
-    padding: 0;
-    text-align: center; 
+html,
+body {
+  background-color: rgb(27, 27, 27);
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
 .container {
-    white-space: nowrap;
-    position: relative;
-    margin: 0px;
-    display: inline-block;
-    vertical-align: middle;
-    text-align: center; 
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-
-a {
-    text-decoration: none;
-}
-
-a:link, a:visited {
-    color: rgb(10, 194, 255)
-}
-
-button {
-    color: white;
-    background-color: rgb(61, 65, 68);
-    border: none;
-}
-
-button:hover {
-    background-color: rgb(77, 83, 87);
+  white-space: nowrap;
+  position: relative;
+  margin: 0px;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
 }
 
 .vcontainer {
-    min-width:10%;
-    max-width:auto;
-    width:60%;
-    display: inline-block;
-    vertical-align: middle;
+  min-width: 10%;
+  max-width: auto;
+  width: 60%;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.editor {
-    font-family: 'Courier New', Courier, monospace;
+a {
+  text-decoration: none;
 }
 
-.state_picker {
-    width: 100%;
-    height: 90px;
-    align-items: center;
-    overflow-y: hidden;
-    overflow-x: scroll;
+a:link,
+a:visited {
+  color: rgb(10, 194, 255);
 }
 
-.state_picker .state {
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    margin-top: 5px;
-    background-color: aqua;
-    user-select: none;
+button {
+  color: white;
+  background-color: rgb(61, 65, 68);
+  border: none;
 }
 
-.state_picker .state:hover {
-    cursor:pointer;
+button:hover {
+  background-color: rgb(77, 83, 87);
+  cursor: pointer;
 }
 
-.simulator {
-    display: inline-block;
-    vertical-align: middle;
-    width: 600px;
-    margin: 0;
-}
-
-.guide {
-    text-align: left;
-    color: white;
-    margin-left: 20%;
-
-    font-family: Arial;
+#sel-preset {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 80px;
 }
 
 #rule_input_box {
-    color: white;
-    border-style: none;
-    padding: 10px;
-    font-size:large;
-    height:500px;
-    width:100%;
-    background-color: rgb(75, 75, 75);
+  width: 100%;
+  height: 600px;
+}
+
+.state_picker {
+  width: 100%;
+  height: 90px;
+  align-items: center;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+
+.state_picker .state {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin-top: 5px;
+  background-color: aqua;
+  user-select: none;
+}
+
+.state_picker .state:hover {
+  cursor: pointer;
+}
+
+.simulator {
+  display: inline-block;
+  vertical-align: middle;
+  width: 600px;
+  margin: 0;
+}
+
+.guide {
+  text-align: left;
+  color: white;
+  margin-left: 20%;
+
+  font-family: Arial;
 }
 
 @keyframes rules_save {
-    from {
-        box-shadow: 0 0 20px lime;
-    }
+  from {
+    box-shadow: 0 0 20px lime;
+  }
 
-    to {
-        box-shadow: 0 0 0px black;
-    }
+  to {
+    box-shadow: 0 0 0px black;
+  }
 }
 
 @keyframes grid_clear {
-    from {
-        box-shadow: 0 0 20px aqua;
-    }
+  from {
+    box-shadow: 0 0 20px aqua;
+  }
 
-    to {
-        box-shadow: 0 0 0px black;
-    }
+  to {
+    box-shadow: 0 0 0px black;
+  }
 }
 
 .controls {
-    height: 10%;
-    position: relative;
+  height: 10%;
+  position: relative;
 }
 
 #grid_canvas {
-    margin:20px;
-    animation: rules_save 1s;
+  margin: 20px;
+  animation: rules_save 1s;
 }

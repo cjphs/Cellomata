@@ -49,6 +49,7 @@ Past ->
 Past2.
 
 Past2 ->
-Grid.`
+Grid.
+`;
 
-export default trontinis
+export default trontinis;

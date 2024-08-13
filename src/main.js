@@ -1,238 +1,314 @@
-import Grid from './Grid.js'
-import { interpretRules } from './interpreter.js'
-import presetRulesets from './presets'
+import Grid from "./Grid.js";
+import { interpretRules } from "./interpreter.js";
+import presetRulesets from "./presets";
 
-const canvas = document.getElementById('grid-canvas')
-const ctx = canvas.getContext('2d')
+import ace from "ace-builds";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/mode-python";
 
-let gridWidth = 64
-let gridHeight = 64
+const canvas = document.getElementById("grid-canvas");
+const ctx = canvas.getContext("2d");
 
-let cellWidth = canvas.clientWidth / gridWidth
-let cellHeight = canvas.clientHeight / gridHeight
+let gridWidth = 64;
+let gridHeight = 64;
 
-function recalculateGridSize () {
-  pause()
+let cellWidth = canvas.clientWidth / gridWidth;
+let cellHeight = canvas.clientHeight / gridHeight;
 
-  cellWidth = canvas.clientWidth / gridWidth
-  cellHeight = canvas.clientHeight / gridHeight
+function recalculateGridSize() {
+  pause();
 
-  grid.width = gridWidth
-  grid.height = gridHeight
+  cellWidth = canvas.clientWidth / gridWidth;
+  cellHeight = canvas.clientHeight / gridHeight;
 
-  resetGrid(rules, false)
+  grid.width = gridWidth;
+  grid.height = gridHeight;
+
+  resetGrid(rules, false);
 }
 
-let grid = null
-let playing = false
+let grid = null;
+let playing = false;
 
-let frame = 0
+let frame = 0;
 
-let selectedCellState = ''
-let selectedCellElement = null
+let selectedCellState = "";
+let selectedCellElement = null;
 
-let stateCols = {}
+let stateCols = {};
 
 const draw = function () {
-  if (grid == null) { return }
+  if (grid == null) {
+    return;
+  }
 
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
-      ctx.fillStyle = stateCols[grid.getCellState(x, y)]
+      ctx.fillStyle = stateCols[grid.getCellState(x, y)];
       ctx.fillRect(
         Math.floor(cellWidth * x),
         Math.floor(cellHeight * y),
         Math.ceil(cellWidth),
-        Math.ceil(cellHeight)
-      )
+        Math.ceil(cellHeight),
+      );
     }
   }
-}
+};
 
 const pauseUnpause = function () {
   if (playing) {
-    pause()
+    pause();
   } else {
-    unpause()
-    play()
+    unpause();
+    play();
   }
-}
+};
 
 const pause = function () {
-  playing = false
-  document.getElementById('play-button').innerHTML = 'Play'
-}
+  playing = false;
+  document.getElementById("play-button").innerHTML = "Play";
+};
 
 const unpause = function () {
-  playing = true
-  document.getElementById('play-button').innerHTML = 'Pause'
-}
+  playing = true;
+  document.getElementById("play-button").innerHTML = "Pause";
+};
 
 const play = function () {
-  if (!playing) { return }
-
-  if (frame++ % 10 === 0) {
-    evolveDraw()
+  if (!playing) {
+    return;
   }
 
-  requestAnimationFrame(play)
-}
+  if (frame++ % 10 === 0) {
+    evolveDraw();
+  }
+
+  requestAnimationFrame(play);
+};
 
 const cssAnim = function (element, animation) {
-  const canv = document.getElementById(element)
-  if (canv == null) { return }
-  canv.style.animation = 'none'
-  canv.offsetWidth
-  canv.style.animation = animation
-}
+  const canv = document.getElementById(element);
+  if (canv == null) {
+    return;
+  }
+  canv.style.animation = "none";
+  canv.offsetWidth;
+  canv.style.animation = animation;
+};
 
 const selectCellState = function (state) {
   if (selectedCellElement != null) {
-    selectedCellElement.style.boxShadow = 'none'
+    selectedCellElement.style.boxShadow = "none";
   }
 
-  selectedCellElement = document.getElementById(state)
-  selectedCellElement.style.boxShadow = 'white 0 0 10px'
-  selectedCellState = state
-}
+  selectedCellElement = document.getElementById(state);
+  selectedCellElement.style.boxShadow = "white 0 0 10px";
+  selectedCellState = state;
+};
 
-let rules = null
+let rules = null;
 
 const updateRules = function (reset = false) {
-  const ruleString = document.getElementById('rule_input_box').value || rules
-  if (ruleString == '') { return }
+  const ruleString = editor.getSession().getValue() || rules;
+  if (ruleString == "") {
+    return;
+  }
 
-  const interpreted = interpretRules (ruleString)
+  let compressed = encodeURIComponent(ruleString);
+  window.history.pushState(
+    { ruleset: compressed },
+    "Cellomata",
+    `?ruleset=${compressed}`,
+  );
 
-  gridWidth = interpreted.gridWidth
-  gridHeight = interpreted.gridHeight
+  const interpreted = interpretRules(ruleString);
 
-  rules = interpreted.ruleset
-  stateCols = interpreted.stateCols
+  gridWidth = interpreted.gridWidth;
+  gridHeight = interpreted.gridHeight;
 
-  const statesBox = document.getElementById('state_picker')
+  rules = interpreted.ruleset;
+  stateCols = interpreted.stateCols;
 
-  statesBox.innerHTML = ''
-  rules.states.forEach(s => {
-    const cellElement = document.createElement('div')
-    cellElement.id = s
-    cellElement.className = 'state'
-    cellElement.style.backgroundColor = stateCols[s]
-    
+  const statesBox = document.getElementById("state_picker");
+
+  statesBox.innerHTML = "";
+  rules.states.forEach((s) => {
+    const cellElement = document.createElement("div");
+    cellElement.id = s;
+    cellElement.className = "state";
+    cellElement.style.backgroundColor = stateCols[s];
+
     cellElement.onclick = function () {
-      selectCellState(s)
-    }
+      selectCellState(s);
+    };
 
-    statesBox.appendChild(cellElement)
+    statesBox.appendChild(cellElement);
   });
 
   if (
     grid == null ||
     interpreted.gridWidth != grid.width ||
-    interpreted.gridHeight != grid.height)
-    {
-    grid = new Grid(interpreted.gridWidth, interpreted.gridHeight, rules, stateCols, interpreted.wrap)
-    recalculateGridSize()
-  }
-  else {
+    interpreted.gridHeight != grid.height
+  ) {
+    grid = new Grid(
+      interpreted.gridWidth,
+      interpreted.gridHeight,
+      rules,
+      stateCols,
+      interpreted.wrap,
+    );
+    recalculateGridSize();
+  } else {
     grid.rules = rules;
   }
 
   if (reset) {
     // if (recalcGridSize) { recalculateGridSize() }
-    recalculateGridSize()
-    resetGrid(rules)
+    recalculateGridSize();
+    resetGrid(rules);
   } else {
     selectCellState(selectedCellState);
   }
 
-  cssAnim('grid_canvas', 'rules_save 1s')
-}
+  cssAnim("grid_canvas", "rules_save 1s");
+};
 
 const clearGrid = function () {
-  grid.resetGrid()
-  selectCellState(grid.rules.getDefaultState())
-  cssAnim('grid_canvas', 'grid_clear 1s')
-  draw()
-}
+  grid.resetGrid();
+  selectCellState(grid.rules.getDefaultState());
+  cssAnim("grid_canvas", "grid_clear 1s");
+  draw();
+};
 
 const resetGrid = function (rules, existingStates = true) {
-  grid.resetGrid(existingStates)
-  selectCellState(rules.getDefaultState())
-  draw()
-}
+  grid.resetGrid(existingStates);
+  selectCellState(rules.getDefaultState());
+  draw();
+};
 
 const evolveDraw = function () {
-  grid.evolve()
-  draw()
-}
+  grid.step();
+  draw();
+};
 
-draw()
+draw();
 
 /*
 Event stuff
 */
 
 document.onkeydown = function (e) {
-  e = e || window
+  e = e || window;
 
-  if (!e.ctrlKey) { return }
+  if (!e.ctrlKey) {
+    return;
+  }
 
   switch (e.key) {
-    case 's':
-      updateRules()
-      draw()
+    case "s":
+      updateRules();
+      draw();
 
-      e.preventDefault()
-      e.stopPropagation()
-      break
+      e.preventDefault();
+      e.stopPropagation();
+      break;
 
-    case 'x':
-      clearGrid()
-      break
+    case "x":
+      clearGrid();
+      break;
   }
-}
+};
 
-let mouseDown = false
-canvas.addEventListener('mousedown', function () { mouseDown = true }, false)
-canvas.addEventListener('mouseup', function () { mouseDown = false }, false)
+let mouseDown = false;
+canvas.addEventListener(
+  "mousedown",
+  function () {
+    mouseDown = true;
+  },
+  false,
+);
+canvas.addEventListener(
+  "mouseup",
+  function () {
+    mouseDown = false;
+  },
+  false,
+);
 
-canvas.addEventListener('mousemove', e => {
-  if (mouseDown) {
-    // https://stackoverflow.com/a/42111623
-    const rect = e.target.getBoundingClientRect()
-    const x = e.clientX - rect.left // x position within the element.
-    const y = e.clientY - rect.top // y position within the element.
+canvas.addEventListener(
+  "mousemove",
+  (e) => {
+    if (mouseDown) {
+      // https://stackoverflow.com/a/42111623
+      const rect = e.target.getBoundingClientRect();
+      const x = e.clientX - rect.left; // x position within the element.
+      const y = e.clientY - rect.top; // y position within the element.
 
-    const cx = Math.floor(x / cellWidth)
-    const cy = Math.floor(y / cellHeight)
+      const cx = Math.floor(x / cellWidth);
+      const cy = Math.floor(y / cellHeight);
 
-    grid.setCellState(cx, cy, selectedCellState)
+      grid.setCellState(cx, cy, selectedCellState);
 
-    draw()
-  }
-}, false)
+      draw();
+    }
+  },
+  false,
+);
 
 const loadPreset = function (preset) {
-  rules = presetRulesets.get(preset)
-  document.getElementById('rule_input_box').value = rules
-  updateRules(true)
-}
+  rules = presetRulesets.get(preset);
 
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('step').addEventListener('click', function() {
-    grid.evolve()
-    draw()
-  })  
-  document.getElementById('updateRules').addEventListener('click', updateRules)
-  document.getElementById('clear-grid').addEventListener('click', clearGrid)
-  document.getElementById('play-button').addEventListener('click', pauseUnpause)
+  window.history.pushState(
+    { ruleset: rules },
+    "Cellomata",
+    `?preset=${preset}`,
+  );
 
-  document.getElementById('template_selection_box').addEventListener('change', function () {
-    loadPreset(this.value)
-  })
+  editor.getSession().setValue(rules);
+  updateRules(true);
+};
 
-  loadPreset('life')
-})
+let editor;
 
-export { updateRules, clearGrid, evolveDraw, pauseUnpause, play, recalculateGridSize, loadPreset }
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("step").addEventListener("click", function () {
+    grid.step();
+    draw();
+  });
+  document.getElementById("updateRules").addEventListener("click", updateRules);
+  document.getElementById("clear-grid").addEventListener("click", clearGrid);
+  document
+    .getElementById("play-button")
+    .addEventListener("click", pauseUnpause);
+
+  document.getElementById("sel-preset").addEventListener("change", function () {
+    loadPreset(this.value);
+  });
+
+  editor = ace.edit("rule_input_box", {
+    mode: "ace/mode/javascript",
+    selectionStyle: "text",
+  });
+
+  let textarea = document.querySelector('textarea[name="rule_input_box"]');
+  textarea.setAttribute("hidden", true);
+
+  editor.setTheme("ace/theme/monokai");
+  editor.getSession().setMode("ace/mode/python");
+
+  editor.getSession().on("change", function () {
+    textarea.value = editor.getSession().getValue();
+  });
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const ruleset = urlParams.get("ruleset");
+  const preset = urlParams.get("preset");
+  if (ruleset) {
+    editor.getSession().setValue(decodeURIComponent(ruleset));
+    updateRules();
+  } else if (preset) {
+    loadPreset(preset);
+  } else {
+    loadPreset("life");
+  }
+});
