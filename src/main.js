@@ -187,7 +187,7 @@ const resetGrid = function (rules, existingStates = true) {
 };
 
 const evolveDraw = function () {
-  grid.evolve();
+  grid.step();
   draw();
 };
 
@@ -272,7 +272,7 @@ let editor;
 
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("step").addEventListener("click", function () {
-    grid.evolve();
+    grid.step();
     draw();
   });
   document.getElementById("updateRules").addEventListener("click", updateRules);
@@ -314,13 +314,3 @@ document.addEventListener("DOMContentLoaded", function () {
     loadPreset("life");
   }
 });
-
-export {
-  updateRules,
-  clearGrid,
-  evolveDraw,
-  pauseUnpause,
-  play,
-  recalculateGridSize,
-  loadPreset,
-};

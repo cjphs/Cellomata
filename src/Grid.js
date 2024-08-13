@@ -1,17 +1,15 @@
 class Grid {
   constructor(width, height, rules, state_cols, wrap) {
-    this.width = width;
-    this.height = height;
-
     this.rules = rules;
 
+    this.width = width;
+    this.height = height;
     this.wrap = wrap;
 
     this.grid = this.getEmptyGrid();
+    this.stateCols = {};
 
     this.stateCounts = {};
-
-    this.stateCols = {};
 
     this.rules.states.forEach((s) => {
       this.stateCounts[s] = 0;
@@ -48,7 +46,6 @@ class Grid {
     }
   };
 
-  // Check if (x,y) are valid coordinates in the grid
   coordinatesInBounds = function (x, y) {
     return (x >= 0) & (x < this.width) & (y >= 0) & (y < this.height);
   };
@@ -68,8 +65,7 @@ class Grid {
     if (this.coordinatesInBounds(x, y)) this.grid[y][x] = state;
   };
 
-  // Evolve the grid by one step
-  evolve = function () {
+  step = function () {
     var next_grid = this.getEmptyGrid();
 
     let s_counts_new = {};
