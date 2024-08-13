@@ -28,20 +28,17 @@ let states = [];
 let variables = {};
 
 const interpretRules = function (ruleString) {
+  let ruleset = null;
+
   let grid_width = 100;
   let grid_height = 100;
   let wrap = false;
 
   let interpreterState = Modes.READ_STATES;
-
-  let ruleset = null;
-
   let stateBeingDefined = "";
-
-  variables = {};
-
   let state_cols = {};
 
+  variables = {};
   recalc_grid_size = false;
 
   const lines = ruleString.split("\n");
@@ -49,178 +46,178 @@ const interpretRules = function (ruleString) {
   lines.forEach((line) => {
     line = line.trim();
 
-    if (line.charAt(0) !== "#" && line.trim() !== "") {
-      switch (interpreterState) {
-        case Modes.READ_STATES: {
-          const newStates = line.replaceAll(" ", "").split(",");
+    if (line === "") return;
+    if (line.charAt(0) === "#") return;
 
-          let stateCount = 0;
-          newStates.forEach((ns) => {
-            if (states.includes(ns)) stateCount++;
-          });
-          reset_grid = !(stateCount == states.length);
+    switch (interpreterState) {
+      case Modes.READ_STATES: {
+        const newStates = line.replaceAll(" ", "").split(",");
 
-          states = newStates;
-          ruleset = new Ruleset(states);
+        let stateCount = 0;
+        newStates.forEach((ns) => {
+          if (states.includes(ns)) stateCount++;
+        });
+        reset_grid = !(stateCount == states.length);
 
-          interpreterState = Modes.SKIP;
-          break;
+        states = newStates;
+        ruleset = new Ruleset(states);
+
+        interpreterState = Modes.SKIP;
+        break;
+      }
+      case Modes.COLORS: {
+        const cols = line.replaceAll(" ", "").split(",");
+        let i = 0;
+        states.forEach((s) => {
+          state_cols[s] = cols[i++];
+        });
+        interpreterState = Modes.SKIP;
+        break;
+      }
+      case Modes.SKIP: {
+        var elements = line.split(" ");
+
+        if (checkSyntaxPart(elements[0], SYNTAX_SIM_WIDTH)) {
+          var w;
+
+          if (elements[1] in variables) w = parseInt(variables[elements[1]]);
+          else w = parseInt(elements[1]);
+
+          if (w != grid_width) {
+            grid_width = w;
+            reset_grid = true;
+            recalc_grid_size = true;
+          }
+        } else if (checkSyntaxPart(elements[0], SYNTAX_SIM_HEIGHT)) {
+          var h;
+
+          if (elements[1] in variables) h = parseInt(variables[elements[1]]);
+          else h = parseInt(elements[1]);
+
+          if (h != grid_height) {
+            grid_height = h;
+            reset_grid = true;
+            recalc_grid_size = true;
+          }
+        } else if (checkSyntaxPart(elements[0], SYNTAX_SIM_WRAP)) {
+          wrap = elements[1] === "true";
         }
-        case Modes.COLORS: {
-          const cols = line.replaceAll(" ", "").split(",");
-          let i = 0;
-          states.forEach((s) => {
-            state_cols[s] = cols[i++];
-          });
-          interpreterState = Modes.SKIP;
-          break;
+
+        if (checkSyntaxPart(elements[0], SYNTAX_SIM_COLOURS))
+          interpreterState = Modes.COLORS;
+        else if (
+          elements.length > 1 &&
+          checkSyntaxPart(elements[1], SYNTAX_BECOMES)
+        ) {
+          stateBeingDefined = elements[0];
+          interpreterState = Modes.DEFINE_CONDITIONALS;
+
+          // new variable
+        } else if (
+          (elements.length > 1) &
+          checkSyntaxPart(elements[1], SYNTAX_IS)
+        ) {
+          variables[elements[0]] = elements[2];
         }
-        case Modes.SKIP: {
-          var elements = line.split(" ");
 
-          if (checkSyntaxPart(elements[0], SYNTAX_SIM_WIDTH)) {
-            var w;
+        break;
+      }
+      case Modes.DEFINE_CONDITIONALS: {
+        interpreterLog("DEFINE_CONDITIONALS");
 
-            if (elements[1] in variables) w = parseInt(variables[elements[1]]);
-            else w = parseInt(elements[1]);
+        elements = line.split(" ");
 
-            if (w != grid_width) {
-              grid_width = w;
-              reset_grid = true;
-              recalc_grid_size = true;
-            }
-          } else if (checkSyntaxPart(elements[0], SYNTAX_SIM_HEIGHT)) {
-            var h;
+        var termination = false;
 
-            if (elements[1] in variables) h = parseInt(variables[elements[1]]);
-            else h = parseInt(elements[1]);
+        if (elements[elements.length - 1].slice(-1) == ".") {
+          interpreterLog("TERMINATION " + elements[0]);
+          if (elements.length == 1) elements[0] = elements[0].slice(0, -1);
 
-            if (h != grid_height) {
-              grid_height = h;
-              reset_grid = true;
-              recalc_grid_size = true;
-            }
-          } else if (checkSyntaxPart(elements[0], SYNTAX_SIM_WRAP)) {
-            wrap = elements[1] === "true";
-          }
-
-          if (checkSyntaxPart(elements[0], SYNTAX_SIM_COLOURS))
-            interpreterState = Modes.COLORS;
-          else if (
-            elements.length > 1 &&
-            checkSyntaxPart(elements[1], SYNTAX_BECOMES)
-          ) {
-            stateBeingDefined = elements[0];
-            interpreterState = Modes.DEFINE_CONDITIONALS;
-
-            // new variable
-          } else if ((elements.length > 1) & (checkSyntaxPart(elements[1], SYNTAX_IS))) {
-            variables[elements[0]] = elements[2];
-          }
-
-          break;
+          termination = true;
         }
-        case Modes.DEFINE_CONDITIONALS: {
-          interpreterLog("DEFINE_CONDITIONALS");
 
-          elements = line.split(" ");
+        var chance = 1;
+        if (elements.length > 1 && checkSyntaxPart(elements[1], SYNTAX_WITH)) {
+          if (checkSyntaxPart(elements[2], SYNTAX_CHANCE)) {
+            interpreterLog("CHANCE");
 
-          var termination = false;
-
-          if (elements[elements.length - 1].slice(-1) == ".") {
-            interpreterLog("TERMINATION " + elements[0]);
-            if (elements.length == 1) elements[0] = elements[0].slice(0, -1);
-
-            termination = true;
+            if (elements[3] in variables) elements[3] = variables[elements[3]];
+            chance = parseFloat(elements[3]);
+            elements.splice(1, 3);
           }
+        }
 
-          var chance = 1;
-          if (
-            elements.length > 1 &&
-            checkSyntaxPart(elements[1], SYNTAX_WITH)
-          ) {
-            if (checkSyntaxPart(elements[2], SYNTAX_CHANCE)) {
-              interpreterLog("CHANCE");
+        if (elements.length > 1 && elements[1] == "if") {
+          interpreterLog("IF");
 
-              if (elements[3] in variables)
-                elements[3] = variables[elements[3]];
-              chance = parseFloat(elements[3]);
-              elements.splice(1, 3);
+          var done = false;
+          var prev_transform = null;
+
+          while (!done) {
+            var locality = elements[2].split("*");
+
+            let locality_states = [];
+            let locality_count = -1;
+            let equality = "=";
+
+            let locality_min = 1;
+            let locality_max = 9;
+
+            if (locality.length > 1) {
+              let r = checkValue(locality[0]);
+
+              locality_min = r[0];
+              locality_max = r[1];
+
+              locality_states = locality[1].split("||");
+            } else {
+              locality_states = locality[0].split("||");
             }
-          }
 
-          if (elements.length > 1 && elements[1] == "if") {
-            interpreterLog("IF");
+            const locality_type = elements[3];
 
-            var done = false;
-            var prev_transform = null;
+            console.log(locality_states);
 
-            while (!done) {
-              var locality = elements[2].split("*");
+            locality_states.forEach((locality_state) => {
+              let clause = new Clause(
+                elements[0],
+                locality_type,
+                locality_state,
+                locality_count,
+                chance,
+                locality_min,
+                locality_max,
+              );
 
-              let locality_states = [];
-              let locality_count = -1;
-              let equality = "=";
+              clause.equality_type = equality;
+              ruleset.addRule(stateBeingDefined, clause);
 
-              let locality_min = 1;
-              let locality_max = 9;
-
-              if (locality.length > 1) {
-                let r = checkValue(locality[0]);
-
-                locality_min = r[0];
-                locality_max = r[1];
-
-                locality_states = locality[1].split("||");
-              } else {
-                locality_states = locality[0].split("||");
+              if (prev_transform != null) {
+                prev_transform.conjunctWith(clause);
+                clause.do_evaluation = false;
               }
 
-              const locality_type = elements[3];
-
-              console.log(locality_states);
-
-              locality_states.forEach((locality_state) => {
-                let clause = new Clause(
-                  elements[0],
-                  locality_type,
-                  locality_state,
-                  locality_count,
-                  chance,
-                  locality_min,
-                  locality_max,
-                );
-
-                clause.equality_type = equality;
-                ruleset.addRule(stateBeingDefined, clause);
-
-                if (prev_transform != null) {
-                  prev_transform.conjunctWith(clause);
-                  clause.do_evaluation = false;
-                }
-
-                if (
-                  elements.length > 4 &&
-                  checkSyntaxPart(elements[4], SYNTAX_AND)
-                ) {
-                  prev_transform = clause;
-                  elements.splice(2, 3);
-                } else {
-                  done = true;
-                }
-              });
-            }
-          } else {
-            let clause = new Clause(elements[0], "always", "", -1, chance);
-            ruleset.addRule(stateBeingDefined, clause);
+              if (
+                elements.length > 4 &&
+                checkSyntaxPart(elements[4], SYNTAX_AND)
+              ) {
+                prev_transform = clause;
+                elements.splice(2, 3);
+              } else {
+                done = true;
+              }
+            });
           }
-
-          if (termination) {
-            interpreterState = Modes.SKIP;
-          }
-
-          break;
+        } else {
+          let clause = new Clause(elements[0], "always", "", -1, chance);
+          ruleset.addRule(stateBeingDefined, clause);
         }
+
+        if (termination) {
+          interpreterState = Modes.SKIP;
+        }
+
+        break;
       }
     }
   });
