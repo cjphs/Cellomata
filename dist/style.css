@@ -42,8 +42,8 @@ button {
 
 button:hover {
   background-color: rgb(77, 83, 87);
+  cursor: pointer;
 }
-
 
 #sel-preset {
   width: 100%;

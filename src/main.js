@@ -281,11 +281,9 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("play-button")
     .addEventListener("click", pauseUnpause);
 
-  document
-    .getElementById("template_selection_box")
-    .addEventListener("change", function () {
-      loadPreset(this.value);
-    });
+  document.getElementById("sel-preset").addEventListener("change", function () {
+    loadPreset(this.value);
+  });
 
   editor = ace.edit("rule_input_box", {
     mode: "ace/mode/javascript",
