@@ -15,6 +15,7 @@ e with chance .025 if n||s left
 w with chance .025 if n||s right
 border if 3*n||e||s||w nearby
 emitter with chance 0.00025 if 8*0 nearby
-0 otherwise.`;
+0 otherwise.
+`;
 
 export default city;
