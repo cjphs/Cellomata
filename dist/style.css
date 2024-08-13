@@ -17,6 +17,14 @@ body {
     "Lucida Sans", Arial, sans-serif;
 }
 
+.vcontainer {
+  min-width: 10%;
+  max-width: auto;
+  width: 60%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
 a {
   text-decoration: none;
 }
@@ -36,17 +44,13 @@ button:hover {
   background-color: rgb(77, 83, 87);
 }
 
-.vcontainer {
-  min-width: 10%;
-  max-width: auto;
-  width: 60%;
-  display: inline-block;
-  vertical-align: middle;
-}
 
-/* .editor {
-    font-family: 'Courier New', Courier, monospace;
-} */
+#template_selection_box {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 80px;
+}
 
 #rule_input_box {
   width: 100%;
@@ -88,16 +92,6 @@ button:hover {
 
   font-family: Arial;
 }
-/* 
-#rule_input_box {
-    color: white;
-    border-style: none;
-    padding: 10px;
-    font-size:large;
-    height:500px;
-    width:100%;
-    background-color: rgb(75, 75, 75);
-} */
 
 @keyframes rules_save {
   from {
