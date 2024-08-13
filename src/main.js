@@ -114,6 +114,13 @@ const updateRules = function (reset = false) {
     return;
   }
 
+  let compressed = encodeURIComponent(ruleString);
+  window.history.pushState(
+    { ruleset: compressed },
+    "Cellomata",
+    `?ruleset=${compressed}`,
+  );
+
   const interpreted = interpretRules(ruleString);
 
   gridWidth = interpreted.gridWidth;
@@ -251,6 +258,13 @@ canvas.addEventListener(
 const loadPreset = function (preset) {
   rules = presetRulesets.get(preset);
   // document.getElementById('rule_input_box').value = rules
+
+  window.history.pushState(
+    { ruleset: rules },
+    "Cellomata",
+    `?preset=${preset}`,
+  );
+
   editor.getSession().setValue(rules);
   updateRules(true);
 };
@@ -290,7 +304,17 @@ document.addEventListener("DOMContentLoaded", function () {
     textarea.value = editor.getSession().getValue();
   });
 
-  loadPreset("life");
+  const urlParams = new URLSearchParams(window.location.search);
+  const ruleset = urlParams.get("ruleset");
+  const preset = urlParams.get("preset");
+  if (ruleset) {
+    editor.getSession().setValue(decodeURIComponent(ruleset));
+    updateRules();
+  } else if (preset) {
+    loadPreset(preset);
+  } else {
+    loadPreset("life");
+  }
 });
 
 export {
