@@ -19,6 +19,6 @@ Wall.
 
 @width 64
 @height 64
-@wrap true`
+@wrap true`;
 
-export default caves
+export default caves;

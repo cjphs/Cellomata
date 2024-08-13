@@ -26,6 +26,6 @@ Nil.
 
 @width 100
 @height 100
-@wrap true`
+@wrap true`;
 
-export default rockpaperscissors
+export default rockpaperscissors;

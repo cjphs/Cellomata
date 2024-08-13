@@ -1,29 +1,29 @@
 class Ruleset {
-    constructor (states) {
-        this.states = states
-        this.clauses = {}
+  constructor(states) {
+    this.states = states;
+    this.clauses = {};
 
-        this.states.forEach(s => {
-        this.clauses[s] = []
-        })
-    }
+    this.states.forEach((s) => {
+      this.clauses[s] = [];
+    });
+  }
 
-    addRule = function (fromState, clause) {
-        this.clauses[fromState].push(clause)
-    }
+  addRule = function (fromState, clause) {
+    this.clauses[fromState].push(clause);
+  };
 
-    getDefaultState = function () {
-        return this.states[0]
-    }
+  getDefaultState = function () {
+    return this.states[0];
+  };
 
-    getStatesDict = function (defaultValue = 0) {
-        const dict = {}
-        this.states.forEach(s => {
-        dict[s] = defaultValue
-        })
+  getStatesDict = function (defaultValue = 0) {
+    const dict = {};
+    this.states.forEach((s) => {
+      dict[s] = defaultValue;
+    });
 
-        return dict
-    }
+    return dict;
+  };
 }
 
-export default Ruleset
+export default Ruleset;
