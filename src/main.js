@@ -255,6 +255,37 @@ canvas.addEventListener(
   false,
 );
 
+window.onload = function() {
+  var div = document.getElementById('grid-parent');
+  var canvas = document.getElementById('grid-canvas');
+  var row = document.getElementById('row-interpreter-simulator');
+
+  var size = Math.min(div.offsetWidth, row.offsetHeight);
+
+  canvas.width = size;
+  canvas.height = size;
+
+  cellWidth = canvas.clientWidth / gridWidth;
+  cellHeight = canvas.clientHeight / gridHeight;
+
+  draw();
+};
+
+window.onresize = function() {
+  var div = document.getElementById('grid-parent');
+  var canvas = document.getElementById('grid-canvas');
+  var row = document.getElementById('row-interpreter-simulator');
+
+  var size = Math.min(div.offsetWidth, row.offsetHeight);
+  canvas.width = size;
+  canvas.height = size;
+
+  cellWidth = canvas.clientWidth / gridWidth;
+  cellHeight = canvas.clientHeight / gridHeight;
+  
+  draw();
+};
+
 const loadPreset = function (preset) {
   rules = presetRulesets.get(preset);
 
