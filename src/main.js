@@ -98,7 +98,12 @@ const cssAnim = function (element, animation) {
   canv.style.animation = animation;
 };
 
-const animateCSS = (element, animation, properties={}, prefix = 'animate__') =>
+const animateCSS = (
+  element,
+  animation,
+  properties = {},
+  prefix = "animate__",
+) =>
   // We create a Promise and return it
   new Promise((resolve, reject) => {
     const animationName = `${prefix}${animation}`;
@@ -110,10 +115,10 @@ const animateCSS = (element, animation, properties={}, prefix = 'animate__') =>
     function handleAnimationEnd(event) {
       event.stopPropagation();
       node.classList.remove(`${prefix}animated`, animationName);
-      resolve('Animation ended');
+      resolve("Animation ended");
     }
 
-    node.addEventListener('animationend', handleAnimationEnd, {once: true});
+    node.addEventListener("animationend", handleAnimationEnd, { once: true });
   });
 
 const selectCellState = function (state) {
@@ -167,7 +172,7 @@ const updateRules = function (reset = false) {
     cellElement.onclick = function () {
       selectCellState(s);
     };
-    
+
     animateCSS("#" + s, "pulse");
 
     statesBox.appendChild(cellElement);
