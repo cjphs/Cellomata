@@ -98,6 +98,24 @@ const cssAnim = function (element, animation) {
   canv.style.animation = animation;
 };
 
+const animateCSS = (element, animation, properties={}, prefix = 'animate__') =>
+  // We create a Promise and return it
+  new Promise((resolve, reject) => {
+    const animationName = `${prefix}${animation}`;
+    const node = document.querySelector(element);
+
+    node.classList.add(`${prefix}animated`, animationName);
+
+    // When the animation ends, we clean the classes and resolve the Promise
+    function handleAnimationEnd(event) {
+      event.stopPropagation();
+      node.classList.remove(`${prefix}animated`, animationName);
+      resolve('Animation ended');
+    }
+
+    node.addEventListener('animationend', handleAnimationEnd, {once: true});
+  });
+
 const selectCellState = function (state) {
   if (selectedCellElement != null) {
     // remove "selected" from element classlist
@@ -106,6 +124,9 @@ const selectCellState = function (state) {
 
   selectedCellElement = document.getElementById(state);
   selectedCellElement.classList.add("border", "border-white");
+
+  animateCSS("#" + state, "pulse");
+
   selectedCellState = state;
 };
 
@@ -146,6 +167,8 @@ const updateRules = function (reset = false) {
     cellElement.onclick = function () {
       selectCellState(s);
     };
+    
+    animateCSS("#" + s, "pulse");
 
     statesBox.appendChild(cellElement);
   });
@@ -174,14 +197,13 @@ const updateRules = function (reset = false) {
   } else {
     selectCellState(selectedCellState);
   }
-
-  cssAnim("grid_canvas", "rules_save 1s");
 };
 
 const clearGrid = function () {
   grid.resetGrid();
   selectCellState(grid.rules.getDefaultState());
-  cssAnim("grid_canvas", "grid_clear 1s");
+  // cssAnim("grid_canvas", "grid_clear 1s");
+  animateCSS("#grid-canvas", "headShake");
   draw();
 };
 
