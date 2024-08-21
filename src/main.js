@@ -98,11 +98,12 @@ const cssAnim = function (element, animation) {
 
 const selectCellState = function (state) {
   if (selectedCellElement != null) {
-    selectedCellElement.style.boxShadow = "none";
+    // remove "selected" from element classlist
+    selectedCellElement.classList.remove("border", "border-white");
   }
 
   selectedCellElement = document.getElementById(state);
-  selectedCellElement.style.boxShadow = "white 0 0 10px";
+  selectedCellElement.classList.add("border", "border-white");
   selectedCellState = state;
 };
 
@@ -135,8 +136,10 @@ const updateRules = function (reset = false) {
   rules.states.forEach((s) => {
     const cellElement = document.createElement("div");
     cellElement.id = s;
-    cellElement.className = "state";
+    cellElement.className = "state rounded m-1";
     cellElement.style.backgroundColor = stateCols[s];
+
+    cellElement.title = s;
 
     cellElement.onclick = function () {
       selectCellState(s);
@@ -255,12 +258,24 @@ canvas.addEventListener(
   false,
 );
 
-window.onload = function() {
-  var div = document.getElementById('grid-parent');
-  var canvas = document.getElementById('grid-canvas');
-  var row = document.getElementById('row-interpreter-simulator');
+window.onload = function () {
+  var div = document.getElementById("grid-parent");
+  var canvas = document.getElementById("grid-canvas");
+  var row = document.getElementById("row-interpreter-simulator");
 
-  var size = Math.min(div.offsetWidth, row.offsetHeight);
+  var divStyle = window.getComputedStyle(div);
+  var rowStyle = window.getComputedStyle(row);
+
+  var divWidth =
+    div.offsetWidth -
+    parseFloat(divStyle.paddingLeft) -
+    parseFloat(divStyle.paddingRight);
+  var rowHeight =
+    row.offsetHeight -
+    parseFloat(rowStyle.paddingTop) -
+    parseFloat(rowStyle.paddingBottom);
+
+  var size = Math.min(divWidth, rowHeight);
 
   canvas.width = size;
   canvas.height = size;
@@ -271,18 +286,30 @@ window.onload = function() {
   draw();
 };
 
-window.onresize = function() {
-  var div = document.getElementById('grid-parent');
-  var canvas = document.getElementById('grid-canvas');
-  var row = document.getElementById('row-interpreter-simulator');
+window.onresize = function () {
+  var div = document.getElementById("grid-parent");
+  var canvas = document.getElementById("grid-canvas");
+  var row = document.getElementById("row-interpreter-simulator");
 
-  var size = Math.min(div.offsetWidth, row.offsetHeight);
+  var divStyle = window.getComputedStyle(div);
+  var rowStyle = window.getComputedStyle(row);
+
+  var divWidth =
+    div.offsetWidth -
+    parseFloat(divStyle.paddingLeft) -
+    parseFloat(divStyle.paddingRight);
+  var rowHeight =
+    row.offsetHeight -
+    parseFloat(rowStyle.paddingTop) -
+    parseFloat(rowStyle.paddingBottom);
+
+  var size = Math.min(divWidth, rowHeight);
   canvas.width = size;
   canvas.height = size;
 
   cellWidth = canvas.clientWidth / gridWidth;
   cellHeight = canvas.clientHeight / gridHeight;
-  
+
   draw();
 };
 
