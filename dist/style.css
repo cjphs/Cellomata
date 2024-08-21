@@ -7,51 +7,18 @@
 html,
 body {
   background-color: rgb(0, 0, 0);
-  margin: 0;
-  padding: 0;
   text-align: center;
-}
-
-.container {
-  /* white-space: nowrap;
-  position: relative;
-  margin: 0px;
-  display: inline-block;
-  vertical-align: middle;
-  text-align: center;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif; */
-    max-width: 1200px;
-}
-
-a {
-  text-decoration: none;
 }
 
 a:link,
 a:visited {
-  color: rgb(10, 194, 255);
-}
-
-button {
   color: white;
-  background-color: rgb(61, 65, 68);
-  border: none;
-}
-
-button:hover {
-  background-color: rgb(77, 83, 87);
-  cursor: pointer;
-}
-
-#rule_input_box {
-  width: 100%;
 }
 
 .state_picker .state {
   display: inline-block;
-  width: 50px;
-  height: 50px;
+  width: 36px;
+  height: 36px;
   margin-top: 5px;
   background-color: aqua;
   user-select: none;
@@ -61,43 +28,8 @@ button:hover {
   cursor: pointer;
 }
 
-
-.guide {
-  text-align: left;
-  color: white;
-  margin-left: 20%;
-
-  font-family: Arial;
-}
-
-@keyframes rules_save {
-  from {
-    box-shadow: 0 0 20px lime;
-  }
-
-  to {
-    box-shadow: 0 0 0px black;
-  }
-}
-
-@keyframes grid_clear {
-  from {
-    box-shadow: 0 0 20px aqua;
-  }
-
-  to {
-    box-shadow: 0 0 0px black;
-  }
-}
-
-.controls {
-  height: 10%;
-  position: relative;
-}
-
-#grid_canvas {
-  margin: 20px;
-  animation: rules_save 1s;
+select {
+  cursor: pointer;
 }
 
 /* override bootstrap colours */

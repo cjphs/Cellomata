@@ -21,9 +21,11 @@
       <div class="row flex-grow-1 px-2 mx-2 align-items-end">
       </div>
 
-       <div class="row p-2 m-2">
+       <div class="row px-2 mx-2">
+
+        <!-- Preset -->
           <div class="col-4 d-flex align-items-end">
-            <select id="sel-preset" class="w-100 h-100 border-0 rounded p-2" data-bs-theme="dark">
+            <select id="sel-preset" class="w-100 h-100 border-0 rounded px-4" data-bs-theme="dark">
               <option value="life">Game of Life</option>
               <option value="rockpaperscissors">Rock Paper Scissors</option>
               <option value="caves">Caves</option>
@@ -32,12 +34,15 @@
             </select>
           </div>
 
+          <!-- State picker -->
           <div class="col-8 col-md-6">
             <div class="state_picker w-100 bg-dark rounded" id="state_picker"></div>
           </div>
         </div>
 
         <div class="row p-2 m-2" style="height: 60vh;" id="row-interpreter-simulator">
+
+          <!-- Rules editor -->
           <div class="col-4">
             <textarea
               name="rule_input_box"
@@ -45,6 +50,7 @@
             <div id="rule_input_box" class="h-100 rounded"></div>
           </div>
 
+          <!-- CA Grid -->
           <div class="col-8 col-md-6">
             <div class="grid w-100 h-100 d-flex justify-content-center align-items-center bg-dark rounded p-2" id="grid-parent">
               <canvas id="grid-canvas" class="border border-secondary rounded"></canvas>
@@ -52,6 +58,7 @@
           </div>
         </div>
 
+        <!-- Interpret -->
         <div class="row flex-grow-1 p-2 m-2 align-items-start">
           <div class="col-4">
             <button
@@ -59,10 +66,11 @@
               class="btn btn-primary w-100"
               id="updateRules"
             >
-              Interpret (CTRL+S)
+              Interpret
             </button>
           </div>
 
+          <!-- Controls -->
           <div class="col-8 col-md-6">
             <div class="row mx-0">
               <button type="button" class="btn btn-outline-secondary col mr-2" id="clear-grid">
@@ -77,45 +85,12 @@
             </div>
           </div>
 
+          <!-- Attribution :) -->
           <div class="col-2 d-none d-md-block">
             <div class="bg-dark rounded text-white p-2">
               by <a href="https://cjphs.github.io/" target="_blank">cjphs</a>
             </div>
         </div>
-
-        <!-- <div class="col-12 col-md-8 mx-auto order-1 order-md-2">
-          <div class="simulator" style="margin: 15px">
-  
-  
-          <div class="controls">
-            <button
-              id="clear-grid"
-              style="width: 100px; height: 50%; margin-top: 10px"
-            >
-              Clear
-            </button>
-            <button id="step" style="width: 100px; height: 50%; margin-top: 10px">
-              Step
-            </button>
-            <button
-              id="play-button"
-              style="width: 100px; height: 50%; margin-top: 10px"
-            >
-              Play
-            </button>
-          </div>
-        </div> -->
-      <!-- </div> -->
-      <!-- Simulation panel (grid) -->
-     
-<!-- 
-      <div style="color: white; font-family: Arial">
-        Created by <a href="https://cjphs.github.io/" target="_blank">cjphs</a>
-      </div>
-
-      <div style="color: white; font-family: Arial">
-        Keyboard shortcuts: CTRL + S (reinterpret rules), CTRL + X (clear grid)
-      </div> -->
     </div>
   </body>
   <script src="./main.js"></script>
