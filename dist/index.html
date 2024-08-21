@@ -26,7 +26,7 @@
 
         <!-- Preset -->
           <div class="col-4 d-flex align-items-end">
-            <select id="sel-preset" class="w-100 h-100 border-0 rounded px-4" data-bs-theme="dark">
+            <select id="sel-preset" class="w-100 h-100 border-0 rounded px-4" data-bs-theme="dark" disabled>
               <option value="life">Game of Life</option>
               <option value="rockpaperscissors">Rock Paper Scissors</option>
               <option value="caves">Caves</option>
@@ -47,6 +47,7 @@
           <div class="col-4">
             <textarea
               name="rule_input_box"
+              style="visibility: hidden; height: 0px;"
             ></textarea>
             <div id="rule_input_box" class="h-100 rounded"></div>
           </div>
@@ -55,6 +56,11 @@
           <div class="col-8 col-md-6">
             <div class="grid w-100 h-100 d-flex justify-content-center align-items-center bg-dark rounded p-2" id="grid-parent">
               <canvas id="grid-canvas" class="border border-secondary rounded"></canvas>
+              <noscript>
+                <div class="alert alert-danger" role="alert">
+                  Please enable JavaScript :)
+                </div>
+              </noscript>
             </div>
           </div>
         </div>
@@ -66,6 +72,7 @@
               type="button"
               class="btn btn-primary w-100"
               id="updateRules"
+              disabled
             >
               Interpret
             </button>
@@ -74,13 +81,13 @@
           <!-- Controls -->
           <div class="col-8 col-md-6">
             <div class="row mx-0">
-              <button type="button" class="btn btn-outline-secondary col mr-2" id="clear-grid">
+              <button type="button" class="btn btn-outline-secondary col mr-2" id="clear-grid" disabled>
                 Clear
               </button>
-              <button type="button" class="btn btn-outline-secondary col mx-2" id="step">
+              <button type="button" class="btn btn-outline-secondary col mx-2" id="step" disabled>
                 Step
               </button>
-              <button type="button" class="btn btn-primary col ml-2" id="play-button">
+              <button type="button" class="btn btn-primary col ml-2" id="play-button" disabled>
                 Play
               </button>
             </div>

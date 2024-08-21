@@ -358,6 +358,20 @@ const loadPreset = function (preset) {
 let editor;
 
 document.addEventListener("DOMContentLoaded", function () {
+  const stepButton = document.getElementById("step");
+  const playButton = document.getElementById("play-button");
+  const clearButton = document.getElementById("clear-grid");
+  const interpretButton = document.getElementById("updateRules");
+
+  const presetSelect = document.getElementById("sel-preset");
+
+  stepButton.disabled = false;
+  playButton.disabled = false;
+  clearButton.disabled = false;
+  interpretButton.disabled = false;
+
+  presetSelect.disabled = false;
+
   document.getElementById("step").addEventListener("click", function () {
     grid.step();
     draw();
