@@ -47,3 +47,9 @@ select {
   background-color: var(--primary-color) !important;
   border-color: var(--primary-color) !important;
 }
+
+/* FOUC */
+html {
+  visibility: visible;
+  opacity: 1;
+}
