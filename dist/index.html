@@ -12,11 +12,11 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <main class="container d-flex flex-column h-100">
+    <main class="container d-flex flex-column h-100" style="max-width: 1600px">
 
        <div class="row flex-grow-1 p-2 m-2 align-items-end">
           <div class="col-4 d-flex align-items-end">
-            <select id="sel-preset" class="w-100 h-100">
+            <select id="sel-preset" class="w-100 h-100" data-bs-theme="dark">
               <option value="life">Game of Life</option>
               <option value="rockpaperscissors">Rock Paper Scissors</option>
               <option value="caves">Caves</option>
@@ -25,7 +25,7 @@
             </select>
           </div>
 
-          <div class="col-6">
+          <div class="col-8 col-md-6">
             <div class="state_picker w-100 bg-dark rounded" id="state_picker"></div>
           </div>
         </div>
@@ -35,10 +35,10 @@
             <textarea
               name="rule_input_box"
             ></textarea>
-            <div id="rule_input_box" class="h-100"></div>
+            <div id="rule_input_box" class="h-100 rounded"></div>
           </div>
 
-          <div class="col-6">
+          <div class="col-8 col-md-6">
             <div class="grid w-100 h-100 d-flex justify-content-center align-items-center bg-dark rounded p-2" id="grid-parent">
               <canvas id="grid-canvas" class="border border-secondary rounded"></canvas>
             </div>
@@ -56,7 +56,7 @@
             </button>
           </div>
 
-          <div class="col-6">
+          <div class="col-8 col-md-6">
             <div class="row mx-0">
               <button type="button" class="btn btn-outline-secondary col mr-2" id="clear-grid">
                 Clear
@@ -70,11 +70,10 @@
             </div>
           </div>
 
-          <div class="col-2">
+          <div class="col-2 d-none d-md-block">
             <div class="bg-dark rounded text-white p-2">
               by <a href="https://cjphs.github.io/" target="_blank">cjphs</a>
             </div>
-  
         </div>
 
         <!-- <div class="col-12 col-md-8 mx-auto order-1 order-md-2">

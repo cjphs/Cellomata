@@ -3,11 +3,13 @@ import { interpretRules } from "./interpreter.js";
 import presetRulesets from "./presets";
 
 import ace from "ace-builds";
-import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-terminal";
 import "ace-builds/src-noconflict/mode-python";
 
 const canvas = document.getElementById("grid-canvas");
 const ctx = canvas.getContext("2d");
+
+const editorTheme = "ace/theme/terminal";
 
 let gridWidth = 64;
 let gridHeight = 64;
@@ -351,8 +353,9 @@ document.addEventListener("DOMContentLoaded", function () {
   let textarea = document.querySelector('textarea[name="rule_input_box"]');
   textarea.setAttribute("hidden", true);
 
-  editor.setTheme("ace/theme/monokai");
+  editor.setTheme(editorTheme);
   editor.getSession().setMode("ace/mode/python");
+  editor.getSession().setUseWrapMode(true);
 
   editor.getSession().on("change", function () {
     textarea.value = editor.getSession().getValue();
