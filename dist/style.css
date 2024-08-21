@@ -1,3 +1,9 @@
+:root {
+  --primary-color: rgb(119, 50, 255);
+  /* calc: darker version of primary-color */
+  --primary-color-dark: rgb(42, 0, 127);
+}
+
 html,
 body {
   background-color: rgb(0, 0, 0);
@@ -94,3 +100,18 @@ button:hover {
   animation: rules_save 1s;
 }
 
+/* override bootstrap colours */
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-color-dark) !important;
+  border-color: var(--primary-color-dark) !important;
+}
+
+.btn-primary:active {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
