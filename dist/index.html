@@ -16,13 +16,13 @@
     />
     <link rel="stylesheet" href="./style.css" />
   </head>
-  <body>
-    <main class="container justify-content-center align-items-center" style="max-width: 1600px">
-      <div class="row px-2 mx-2 d-flex align-items-center">
+  <body style="display: flex; flex-direction: column; justify-content: center; min-height: 100vh;">
+    <main class="container d-flex align-items-center justify-content-center" style="max-width: 1600px">
+      <div class="row px-2 mx-2 w-100">
   
         <!-- Preset -->
-        <div class="col-4 d-flex align-items-end mb-2 d-flex flex-shrink-1">
-            <select id="sel-preset" class="w-100 border-0 rounded px-4" data-bs-theme="dark" disabled>
+        <div class="col-12 col-sm-4 d-flex align-items-end my-2">
+            <select id="sel-preset" class="w-100 h-100 border-0 rounded px-4" data-bs-theme="dark" disabled>
               <option value="life">Game of Life</option>
               <option value="rockpaperscissors">Rock Paper Scissors</option>
               <option value="caves">Caves</option>
@@ -32,12 +32,12 @@
         </div>
   
         <!-- State picker -->
-        <div class="col-8 col-md-6 mb-2 flex-grow-0 d-flex align-items-end d-flex flex-shrink-1">
+        <div class="col-12 col-sm-8 col-md-6 my-2 flex-grow-0 d-flex align-items-start align-items-sm-end d-flex">
           <div class="state_picker w-100 bg-dark rounded flex-grow-0" id="state_picker"></div>
         </div>
   
         <!-- Rules editor -->
-        <div class="col-4 mb-2 flex-grow-1">
+        <div class="col-12 col-sm-4 my-2 align-items-start" style="min-height: 60vh;">
           <textarea
             name="rule_input_box"
             style="visibility: hidden; height: 0px;"
@@ -46,8 +46,8 @@
         </div>
   
         <!-- CA Grid -->
-        <div class="col-8 col-md-6 mb-2 flex-column flex-grow-1">
-          <div class="grid w-100 h-100 d-flex justify-content-center align-items-center bg-dark rounded p-2 " id="grid-parent">
+        <div class="col-12 col-sm-8 col-md-6 my-2" style="height: 60vh;" id="col-simulator">
+          <div class="grid w-100 h-100 d-flex justify-content-center align-items-center bg-dark rounded p-2" id="grid-parent">
             <canvas id="grid-canvas" class="border border-secondary rounded"></canvas>
             <noscript>
               <div class="alert alert-danger" role="alert">
@@ -58,7 +58,7 @@
         </div>
   
         <!-- Interpret -->
-        <div class="col-4 mb-2">
+        <div class="col-12 col-sm-4 my-2">
           <button
             type="button"
             class="btn btn-primary w-100"
@@ -70,22 +70,22 @@
         </div>
   
         <!-- Controls -->
-        <div class="col-8 col-md-6 mb-2">
-          <div class="row mx-0">
-            <button type="button" class="btn btn-outline-secondary col mr-2" id="clear-grid" disabled>
+        <div class="col-12 col-sm-8 col-md-6 my-2">
+          <div class="row mx-2">
+            <button type="button" class="btn btn-outline-secondary col me-2" id="clear-grid" disabled>
               Clear
             </button>
             <button type="button" class="btn btn-outline-secondary col mx-2" id="step" disabled>
               Step
             </button>
-            <button type="button" class="btn btn-primary col ml-2" id="play-button" disabled>
+            <button type="button" class="btn btn-primary col ms-2" id="play-button" disabled>
               Play
             </button>
           </div>
         </div>
   
         <!-- Attribution :) -->
-        <div class="col-2 d-none d-md-block">
+        <div class="col-12 col-md-2 my-2">
           <div class="bg-dark rounded text-white p-2">
             by <a href="https://cjphs.github.io/" target="_blank">cjphs</a>
           </div>

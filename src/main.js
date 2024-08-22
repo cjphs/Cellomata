@@ -290,7 +290,7 @@ canvas.addEventListener(
 window.onload = function () {
   var div = document.getElementById("grid-parent");
   var canvas = document.getElementById("grid-canvas");
-  var row = document.getElementById("row-interpreter-simulator");
+  var row = document.getElementById("col-simulator");
 
   var divStyle = window.getComputedStyle(div);
   var rowStyle = window.getComputedStyle(row);
@@ -318,7 +318,7 @@ window.onload = function () {
 window.onresize = function () {
   var div = document.getElementById("grid-parent");
   var canvas = document.getElementById("grid-canvas");
-  var row = document.getElementById("row-interpreter-simulator");
+  var row = document.getElementById("col-simulator");
 
   var divStyle = window.getComputedStyle(div);
   var rowStyle = window.getComputedStyle(row);
