@@ -287,7 +287,7 @@ canvas.addEventListener(
   false,
 );
 
-window.onload = function () {
+function resizeGridElement() {
   var div = document.getElementById("grid-parent");
   var canvas = document.getElementById("grid-canvas");
   var row = document.getElementById("col-simulator");
@@ -302,7 +302,7 @@ window.onload = function () {
   var rowHeight =
     row.offsetHeight -
     parseFloat(rowStyle.paddingTop) -
-    parseFloat(rowStyle.paddingBottom);
+    parseFloat(rowStyle.paddingBottom) - 16;
 
   var size = Math.min(divWidth, rowHeight);
 
@@ -313,33 +313,14 @@ window.onload = function () {
   cellHeight = canvas.clientHeight / gridHeight;
 
   draw();
+}
+
+window.onload = function () {
+  resizeGridElement();
 };
 
 window.onresize = function () {
-  var div = document.getElementById("grid-parent");
-  var canvas = document.getElementById("grid-canvas");
-  var row = document.getElementById("col-simulator");
-
-  var divStyle = window.getComputedStyle(div);
-  var rowStyle = window.getComputedStyle(row);
-
-  var divWidth =
-    div.offsetWidth -
-    parseFloat(divStyle.paddingLeft) -
-    parseFloat(divStyle.paddingRight);
-  var rowHeight =
-    row.offsetHeight -
-    parseFloat(rowStyle.paddingTop) -
-    parseFloat(rowStyle.paddingBottom);
-
-  var size = Math.min(divWidth, rowHeight);
-  canvas.width = size;
-  canvas.height = size;
-
-  cellWidth = canvas.clientWidth / gridWidth;
-  cellHeight = canvas.clientHeight / gridHeight;
-
-  draw();
+  resizeGridElement();
 };
 
 const loadPreset = function (preset) {
