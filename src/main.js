@@ -302,7 +302,8 @@ function resizeGridElement() {
   var rowHeight =
     row.offsetHeight -
     parseFloat(rowStyle.paddingTop) -
-    parseFloat(rowStyle.paddingBottom) - 16;
+    parseFloat(rowStyle.paddingBottom) -
+    16;
 
   var size = Math.min(divWidth, rowHeight);
 
