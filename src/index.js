@@ -98,39 +98,13 @@ const cssAnim = function (element, animation) {
   canv.style.animation = animation;
 };
 
-const animateCSS = (
-  element,
-  animation,
-  properties = {},
-  prefix = "animate__",
-) =>
-  // We create a Promise and return it
-  new Promise((resolve, reject) => {
-    const animationName = `${prefix}${animation}`;
-    const node = document.querySelector(element);
-
-    node.classList.add(`${prefix}animated`, animationName);
-
-    // When the animation ends, we clean the classes and resolve the Promise
-    function handleAnimationEnd(event) {
-      event.stopPropagation();
-      node.classList.remove(`${prefix}animated`, animationName);
-      resolve("Animation ended");
-    }
-
-    node.addEventListener("animationend", handleAnimationEnd, { once: true });
-  });
-
 const selectCellState = function (state) {
   if (selectedCellElement != null) {
-    // remove "selected" from element classlist
     selectedCellElement.classList.remove("border", "border-white");
   }
 
   selectedCellElement = document.getElementById(state);
   selectedCellElement.classList.add("border", "border-white");
-
-  animateCSS("#" + state, "pulse");
 
   selectedCellState = state;
 };
@@ -142,13 +116,6 @@ const updateRules = function (reset = false) {
   if (ruleString == "") {
     return;
   }
-
-  let compressed = encodeURIComponent(ruleString);
-  window.history.pushState(
-    { ruleset: compressed },
-    "Cellomata",
-    `?ruleset=${compressed}`,
-  );
 
   const interpreted = interpretRules(ruleString);
 
@@ -172,8 +139,6 @@ const updateRules = function (reset = false) {
     cellElement.onclick = function () {
       selectCellState(s);
     };
-
-    animateCSS("#" + s, "pulse");
 
     statesBox.appendChild(cellElement);
   });
@@ -207,8 +172,6 @@ const updateRules = function (reset = false) {
 const clearGrid = function () {
   grid.resetGrid();
   selectCellState(grid.rules.getDefaultState());
-  // cssAnim("grid_canvas", "grid_clear 1s");
-  animateCSS("#grid-canvas", "headShake");
   draw();
 };
 
@@ -385,12 +348,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   const urlParams = new URLSearchParams(window.location.search);
-  const ruleset = urlParams.get("ruleset");
   const preset = urlParams.get("preset");
-  if (ruleset) {
-    editor.getSession().setValue(decodeURIComponent(ruleset));
-    updateRules();
-  } else if (preset) {
+  if (preset) {
     loadPreset(preset);
   } else {
     loadPreset("life");
