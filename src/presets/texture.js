@@ -1,6 +1,6 @@
 const texture = `0, 1, 2, 3, 4, 5
 @colors
-black, #888888, #666666, #444444, #222222, #111111
+black, #880044, #660033, #440022, #220011, #111111
 
 p = 0.25
 q = .75
@@ -8,14 +8,10 @@ s = 0.001
 
 0 becomes:
 1 with chance s
-1 with chance p if 1 nearby
-2 with chance q if 1 nearby
-2 with chance p if 2 nearby
-3 with chance q if 2 nearby
-3 with chance p if 3 nearby
-4 with chance q if 3 nearby
-4 with chance p if 4 nearby
-5 with chance q if 4 nearby
+(1,2) with chance (p,q) if (1,1) nearby
+(2,3) with chance (p,q) if (2,2) nearby
+(3,4) with chance (p,q) if (3,3) nearby
+(4,5) with chance (p,q) if (4,4) nearby
 5 with chance p if 5 nearby
 0 otherwise.
 
@@ -26,6 +22,7 @@ s = 0.001
 @width 64
 @height 64
 @wrap true
+
 `;
 
 export default texture;

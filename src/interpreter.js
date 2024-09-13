@@ -42,13 +42,56 @@ const interpretRules = function (ruleString) {
   recalc_grid_size = false;
 
   const lines = ruleString.split("\n");
+  const processedLines = [];
 
+  // preprocess lines
   lines.forEach((line) => {
     line = line.trim();
 
     if (line === "") return;
     if (line.charAt(0) === "#") return;
 
+    let pushRawLine = true;
+
+    const tupleMatches = line.match(/\(([^)]+)\)/g);
+    if (tupleMatches) {
+      const lengths = tupleMatches.map((m) => m.split(",").length);
+      if (lengths.some((l) => l !== lengths[0])) {
+        throw new Error("Mismatched lengths in rule");
+      }
+      const expandedLines = [];
+      for (let i = 0; i < lengths[0]; i++) {
+        let newLine = line;
+        tupleMatches.forEach((m) => {
+          const parts = m.slice(1, -1).split(",");
+          newLine = newLine.replace(m, parts[i]);
+        });
+        expandedLines.push(newLine);
+      }
+      processedLines.push(...expandedLines);
+      pushRawLine = false;
+    }
+    
+    // const arrayMatches = line.match(/\[([^)]+)\]/g);
+    // if (arrayMatches) {
+    //   const expandedLines = [];
+    //   arrayMatches.forEach((m) => {
+    //     const parts = m.slice(1, -1).split(",");
+    //     parts.forEach((p) => {
+    //       const newLine = line.replace(m, p);
+    //       expandedLines.push(newLine);
+    //     });
+    //   });
+    //   processedLines.push(...expandedLines);
+    //   pushRawLine = false;
+    // }
+
+    if (pushRawLine) {
+      processedLines.push(line);
+    }
+  });
+
+  processedLines.forEach((line) => {
     switch (interpreterState) {
       case Modes.READ_STATES: {
         const newStates = line.replaceAll(" ", "").split(",");
