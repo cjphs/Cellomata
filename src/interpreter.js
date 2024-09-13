@@ -71,7 +71,7 @@ const interpretRules = function (ruleString) {
       processedLines.push(...expandedLines);
       pushRawLine = false;
     }
-    
+
     // const arrayMatches = line.match(/\[([^)]+)\]/g);
     // if (arrayMatches) {
     //   const expandedLines = [];
