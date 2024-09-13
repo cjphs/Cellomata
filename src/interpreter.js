@@ -64,7 +64,7 @@ const interpretRules = function (ruleString) {
         let newLine = line;
         tupleMatches.forEach((m) => {
           const parts = m.slice(1, -1).split(",");
-          newLine = newLine.replace(m, parts[i]);
+          newLine = newLine.replace(m, parts[i].trim());
         });
         expandedLines.push(newLine);
       }
